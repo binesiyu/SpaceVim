@@ -18,7 +18,6 @@ function! SpaceVim#autocmds#init() abort
     autocmd FileType jsp call JspFileTypeInit()
     autocmd QuitPre * call SpaceVim#plugins#windowsmanager#UpdateRestoreWinInfo()
     autocmd WinEnter * call SpaceVim#plugins#windowsmanager#MarkBaseWin()
-    autocmd FileType html,css,scss,sass,less,javascript,jsp,vue,eex EmmetInstall
     autocmd BufRead,BufNewFile *.pp setfiletype puppet
     if g:spacevim_enable_cursorline == 1
       autocmd BufEnter,WinEnter,InsertLeave * setl cursorline
@@ -80,7 +79,6 @@ function! SpaceVim#autocmds#init() abort
     autocmd ColorScheme * call SpaceVim#api#import('vim#highlight').hide_in_normal('EndOfBuffer')
     autocmd ColorScheme gruvbox call s:fix_gruvbox()
     autocmd VimEnter * call SpaceVim#autocmds#VimEnter()
-    autocmd User RooterChDir call SpaceVim#plugins#projectmanager#RootchandgeCallback()
     autocmd BufEnter * let b:_spacevim_project_name = get(g:, '_spacevim_project_name', '')
     autocmd SessionLoadPost * let g:_spacevim_session_loaded = 1
   augroup END

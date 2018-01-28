@@ -31,7 +31,6 @@ function! s:parser_argv() abort
     endif
 endfunction
 let s:status = s:parser_argv()
-call SpaceVim#plugins#projectmanager#RootchandgeCallback()
 if s:status[0]
     let g:_spacevim_enter_dir = s:status[1]
     augroup SPwelcome
@@ -48,6 +47,7 @@ catch
 endtry
 
 
+
 call zvim#util#source_rc('init.vim')
 
 call SpaceVim#default()
@@ -57,6 +57,8 @@ call SpaceVim#loadCustomConfig()
 call SpaceVim#server#connect()
 
 call SpaceVim#end()
+
+call SpaceVim#plugins#projectmanager#RootchandgeCallback()
 
 call zvim#util#source_rc('general.vim')
 

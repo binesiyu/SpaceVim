@@ -227,7 +227,12 @@ Define the left section of statusline in active windows. By default:
                                         *g:spacevim_statusline_right_sections*
 Define the right section of statusline in active windows. By default:
 >
-  let g:spacevim_statusline_right_sections = ['fileformat', 'cursorpos']
+  g:spacevim_statusline_right_sections =
+    \ [
+    \ 'fileformat',
+    \ 'cursorpos',
+    \ 'percentage'
+    \ ]
 <
 
                                        *g:spacevim_statusline_unicode_symbols*
@@ -406,6 +411,9 @@ Plugin groups to be loaded.
 Set the github username, It will be used for getting your starred repos, and
 fuzzy find the repo you want.
 
+                                               *g:spacevim_windows_smartclose*
+Set the default key for smart close windows, default is `q`.
+
                                                  *g:spacevim_disabled_plugins*
 Disable plugins by name.
 >
@@ -419,6 +427,12 @@ Add custom plugins.
               \ ['plasticboy/vim-markdown', 'on_ft' : 'markdown'],
               \ ['wsdjeg/GitHub.vim'],
               \ ]
+<
+
+                                                   *g:spacevim_filetype_icons*
+change the default filetype icon for a specific filtype.
+>
+  let g:spacevim_filetype_icons['md'] = ''
 <
 
                                               *g:spacevim_force_global_config*
@@ -436,6 +450,13 @@ Enable/Disable lint on save feature of SpaceVim's maker. Default is 1.
 >
   let g:spacevim_lint_on_save = 0
 <
+
+                                          *g:spacevim_project_rooter_patterns*
+Set the project rooter patterns, by default it is `['.git/', '_darcs/',
+'.hg/', '.bzr/', '.svn/']`
+
+                                     *g:spacevim_project_rooter_automatically*
+Enable/Disable changing directory automatically. Enabled by default.
 
                                                   *g:spacevim_lint_on_the_fly*
 Enable/Disable lint on the fly feature of SpaceVim's maker. Default is 0.

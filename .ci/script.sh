@@ -10,7 +10,7 @@ elif [ "$LINT" = "vimlint-errors" ]; then
   if [[ -f build_log ]]; then
     rm build_log
   fi
-  for file in $(git diff --name-only HEAD dev | grep .vim$);
+  for file in $(git diff --name-only HEAD master | grep .vim$);
   do
     /tmp/vimlint/bin/vimlint.sh -E -l /tmp/vimlint -p /tmp/vimlparser $file >> build_log 2>&1;
   done
@@ -29,5 +29,8 @@ elif [ "$LINT" = "vader" ]; then
   covimerage -vv xml --omit 'build/*'
   pip install codecov
   codecov -X search gcov pycov -f coverage.xml
+elif [ "$LINT" = "jekyll" ]; then
+  .ci/build-production
+  tree docs/_site
 fi
 set +x

@@ -3,6 +3,7 @@ function! SpaceVim#layers#lang#javascript#plugins() abort
      \ ['MaxMEllon/vim-jsx-pretty', { 'on_ft': 'javascript' }],
      \ ['Galooshi/vim-import-js', {
      \ 'on_ft': 'javascript', 'build' : 'npm install -g import-js' }],
+     \ ['heavenshell/vim-jsdoc', { 'on_cmd': 'JsDoc' }],
      \ ['maksimr/vim-jsbeautify', { 'on_ft': 'javascript' }],
      \ ['mmalecki/vim-node.js', { 'on_ft': 'javascript' }],
      \ ['moll/vim-node', { 'on_ft': 'javascript' }],
@@ -24,9 +25,27 @@ function! SpaceVim#layers#lang#javascript#plugins() abort
 endfunction
 
 let s:auto_fix = 0
+let s:use_local_eslint = 0
 
 function! SpaceVim#layers#lang#javascript#set_variable(var) abort
   let s:auto_fix = get(a:var, 'auto_fix', 0)
+  let s:use_local_eslint = get(a:var, 'use_local_eslint', 0)
+endfunction
+
+function! s:preferLocalEslint() 
+  let dir = expand('%:p:h')
+  while  finddir('node_modules' ,dir ) is ''
+    let next_dir = fnamemodify(dir, ':h')
+    if dir == next_dir
+      break
+    endif
+    let dir = next_dir
+  endwhile
+  let node_modules_path = dir . '/node_modules'
+  let eslint_bin = node_modules_path . '/.bin/eslint'
+  if (executable(eslint_bin)) 
+    let b:neomake_javascript_eslint_exe = eslint_bin
+  endif
 endfunction
 
 function! SpaceVim#layers#lang#javascript#config() abort
@@ -41,7 +60,7 @@ function! SpaceVim#layers#lang#javascript#config() abort
 
   call SpaceVim#plugins#runner#reg_runner('javascript', 'node %s')
   call SpaceVim#mapping#space#regesit_lang_mappings('javascript',
-        \ funcref('s:on_ft'))
+        \ function('s:on_ft'))
 
   if SpaceVim#layers#lsp#check_filetype('javascript')
     call SpaceVim#mapping#gd#add('javascript',
@@ -62,6 +81,13 @@ function! SpaceVim#layers#lang#javascript#config() abort
       autocmd FocusGained * checktime
     augroup END
   endif
+  
+  if s:use_local_eslint
+    augroup Spacevim_lang_javascript
+      autocmd BufNewFile,BufRead *.js call s:preferLocalEslint()
+    augroup END
+  endif
+
 endfunction
 
 function! s:on_ft() abort
@@ -77,6 +103,22 @@ function! s:on_ft() abort
   inoremap <silent><buffer> <C-j>g <Esc>:ImportJSGoto<CR>a
   " }}}
 
+  " heavenshell/vim-jsdoc {{{
+
+  " Allow prompt for interactive input.
+  let g:jsdoc_allow_input_prompt = 1
+
+  " Prompt for a function description
+  let g:jsdoc_input_description = 1
+
+  " Set value to 1 to turn on detecting underscore starting functions as private convention
+  let g:jsdoc_underscore_private = 1
+
+  " Enable to use ECMAScript6's Shorthand function, Arrow function.
+  let g:jsdoc_enable_es6 = 1
+
+  " }}}
+
   if SpaceVim#layers#lsp#check_filetype('javascript')
     nnoremap <silent><buffer> K :call SpaceVim#lsp#show_doc()<CR>
 
@@ -90,6 +132,11 @@ function! s:on_ft() abort
     call SpaceVim#mapping#space#langSPC('nnoremap', ['l', 'e'], 'TernRename',
           \ 'rename symbol', 1)
   endif
+
+  let g:_spacevim_mappings_space.l.g = {'name' : '+Generate'}
+
+  call SpaceVim#mapping#space#langSPC('nnoremap', ['l', 'g', 'd'], 'JsDoc',
+        \ 'generate JSDoc', 1)
 
   call SpaceVim#mapping#space#langSPC('nnoremap', ['l', 'r'],
         \ 'call SpaceVim#plugins#runner#open()', 'execute current file', 1)

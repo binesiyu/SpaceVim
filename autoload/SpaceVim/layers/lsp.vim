@@ -82,6 +82,7 @@ let s:lsp_servers = {
       \ 'go' : ['go-langserver', '-mode', 'stdio'],
       \ 'rust' : ['rustup', 'run', 'nightly', 'rls'],
       \ 'python' : ['pyls'],
+      \ 'html' : ['html-languageserver', '--stdio'],
       \ 'php' : ['php', g:spacevim_plugin_bundle_dir . 'repos/github.com/felixfbecker/php-language-server/bin/php-language-server.php']
       \ }
 
@@ -98,7 +99,7 @@ function! SpaceVim#layers#lsp#set_variable(var) abort
       if executable(cmd)
         call add(s:enabled_fts, ft)
       else
-        call SpaceVim#logger#warn('Failed to enable lsp for ' . ft . ', ' . cmd . 'is not executable!')
+        call SpaceVim#logger#warn('Failed to enable lsp for ' . ft . ', ' . cmd . ' is not executable!')
       endif
     endif
   endfor

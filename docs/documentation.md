@@ -86,12 +86,16 @@ description: "General documentation about how to using SpaceVim, including the q
       - [Searching the web](#searching-the-web)
     - [Searching on the fly](#searching-on-the-fly)
     - [Persistent highlighting](#persistent-highlighting)
+    - [Highlight current symbol](#highlight-current-symbol)
   - [Editing](#editing)
     - [Paste text](#paste-text)
       - [Auto-indent pasted text](#auto-indent-pasted-text)
     - [Text manipulation commands](#text-manipulation-commands)
     - [Text insertion commands](#text-insertion-commands)
     - [Increase/Decrease numbers](#increasedecrease-numbers)
+    - [Replace text with iedit](#replace-text-with-iedit)
+      - [iedit states key bindings](#iedit-states-key-bindings)
+      - [Examples](#examples)
     - [Commenting](#commenting)
     - [Multi-Encodings](#multi-encodings)
   - [Errors handling](#errors-handling)
@@ -180,7 +184,7 @@ Community-driven configuration provides curated packages tuned by power users an
 - **Lower the risk of RSI:** by heavily using the space bar instead of modifiers.
 - **Batteries included:** discover hundreds of ready-to-use packages nicely
     organised in configuration layers following a set of
-    [conventions](http://spacevim.org/development/).
+    [conventions](http://spacevim.org/conventions/).
 - **Neovim centric:** Dark powered mode of SpaceVim
 
 ## Screenshots
@@ -371,6 +375,10 @@ the option is `g:spacevim_windows_leader`, defalut value is `s`.
 - The `,` key does repeat last `f`, `F`, `t` and `T` in vim, but in SpaceVim it is the language specified Leader key.
 
 the option is `g:spacevim_enable_language_specific_leader`, defalut value is 1.
+
+- The `q` key does recording, but in SpaceVim it is used for smart close window.
+
+the option is `g:spacevim_windows_smartclose`, defalut value is `q`. If you still prefer the origin function of `q`, you can use an empty string to disable this feature.
 
 [Send a PR](http://spacevim.org/development/) to add the differences you found in this section.
 
@@ -1281,6 +1289,39 @@ key binding in FlyGrep buffer:
 
 SpaceVim uses `g:spacevim_search_highlight_persist` to keep the searched expression highlighted until the next search. It is also possible to clear the highlighting by pressing `SPC s c` or executing the ex command `:noh`.
 
+#### Highlight current symbol
+
+SpaceVim supports highlighting of the current symbol on demand and add a transient state to easily navigate and rename these symbol.
+
+It is also possible to change the range of the navigation on the fly to:
+
+- buffer
+- function
+- visible area
+
+To Highlight the current symbol under point press `SPC s h`.
+
+Navigation between the highlighted symbols can be done with the commands:
+
+| Key Binding | Description                                                                  |
+| ----------- | ---------------------------------------------------------------------------- |
+| `*`         | initiate navigation transient state on current symbol and jump forwards      |
+| `#`         | initiate navigation transient state on current symbol and jump backwards     |
+| `SPC s e`   | edit all occurrences of the current symbol                                   |
+| `SPC s h`   | highlight the current symbol and all its occurrence within the current range |
+| `SPC s H`   | go to the last searched occurrence of the last highlighted symbol            |
+
+In highlight symbol transient state:
+
+| Key Binding   | Description                                                   |
+| ------------- | ------------------------------------------------------------- |
+| `e`           | edit occurrences (`*`)                                        |
+| `n`           | go to next occurrence                                         |
+| `N`           | go to previous occurrence                                     |
+| `r`           | change range (function, display area, whole buffer)           |
+| `R`           | go to home occurrence (reset position to starting occurrence) |
+| Any other key | leave the navigation transient state                          |
+
 ### Editing
 
 #### Paste text
@@ -1382,6 +1423,58 @@ In transient state:
 | Any other key | leave the transient state              |
 
 **Tips:** you can increase or decrease a value by more that once by using a prefix argument (i.e. `10 SPC n +` will add 10 to the number under point).
+
+#### Replace text with iedit
+
+SpaceVim uses powerful iedit mode to quick edit multiple occurrences of a symbol or selection.
+
+**Two new modes:** `iedit-Normal`/`idite-Insert`
+
+The defalut color for iedit is `red`/`green` which is based on the current colorscheme.
+
+##### iedit states key bindings
+
+**State transitions:**
+
+| Key Binding | From             | to           |
+| ----------- | ---------------- | ------------ |
+| `SPC s e`   | normal or visual | iedit-Normal |
+
+**In iedit-Normal mode:**
+
+`iedit-Normal` mode inherits from `Normal` mode, the following key bindings are specific to `iedit-Normal` mode.
+
+| Key Binding | Description                                                                     |
+| ----------- | ------------------------------------------------------------------------------- |
+| `Esc`       | go back to `Normal` mode                                                        |
+| `i`         | switch to `iedit-Insert` mode, same as `i`                                      |
+| `a`         | switch to `iedit-Insert` mode, same as `a`                                      |
+| `I`         | go to the beginning of the current occurrence and switch to `iedit-Insert` mode |
+| `A`         | go to the end of the current occurrence and switch to `iedit-Insert` mode       |
+| `<Left>`    | Move cursor to left                                                             |
+| `<Right>`   | Move cursor to right                                                            |
+| `0`         | go to the beginning of the current occurrence                                   |
+| `$`         | go to the end of the current occurrence                                         |
+| `D`         | delete the occurrences                                                          |
+| `S`         | delete the occurrences and switch to iedit-Insert mode                          |
+| `gg`        | go to first occurrence                                                          |
+| `G`         | go to last occurrence                                                           |
+| `n`         | go to next occurrence                                                           |
+| `N`         | go to previous occurrence                                                       |
+| `p`         | replace occurrences with last yanked (copied) text                              |
+| `<Tab>`     | toggle current occurrence                                                       |
+
+**In iedit-Insert mode:**
+
+| Key Binding | Description                    |
+| ----------- | ------------------------------ |
+| `Esc`       | go back to `iedit-Normal` mode |
+| `<Left>`    | Move cursor to left            |
+| `<Right>`   | Move cursor to right           |
+| `<C-w>`     | delete words before cursor     |
+| `<C-K>`     | delete words after cursor      |
+
+##### Examples
 
 #### Commenting
 
@@ -1486,24 +1579,26 @@ Use `svc` to open a file in the existing Vim server, or using `nsvc` to open a f
 ![server-and-client](https://user-images.githubusercontent.com/13142418/32554968-7164fe9c-c4d6-11e7-95f7-f6a6ea75e05b.gif)
 
 <!-- SpaceVim Achievements start -->
-
 ## Achievements
 
 ### issues
 
-| Achievements                                                          | Account                                     |
-| --------------------------------------------------------------------- | ------------------------------------------- |
-| [100th issue(issue)](https://github.com/SpaceVim/SpaceVim/issues/100) | [BenBergman](https://github.com/BenBergman) |
+Achievements | Account
+----- | -----
+[100th issue(issue)](https://github.com/SpaceVim/SpaceVim/issues/100) | [BenBergman](https://github.com/BenBergman)
+[1000th issue(PR)](https://github.com/SpaceVim/SpaceVim/issues/1000) | [sei40kr](https://github.com/sei40kr)
 
 ### Stars, forks and watchers
 
-| Achievements      | Account                                           |
-| ----------------- | ------------------------------------------------- |
-| First stargazers  | [monkeydterry](https://github.com/monkeydterry)   |
-| 100th stargazers  | [iwillalwaysbe](https://github.com/iwillalwaysbe) |
-| 1000th stargazers | [elvin-du](https://github.com/elvin-du)           |
-| 2000th stargazers | [tobiasgoecke](https://github.com/tobiasgoecke)   |
-| 3000th stargazers | [WellerQu](https://github.com/WellerQu)           |
+Achievements | Account
+----- | -----
+First stargazers | [monkeydterry](https://github.com/monkeydterry)
+100th stargazers | [ShaneDelmore](https://github.com/ShaneDelmore)
+1000th stargazers | [dongkui0712](https://github.com/dongkui0712)
+2000th stargazers | [EvgeneOskin](https://github.com/EvgeneOskin)
+3000th stargazers | [zerdon](https://github.com/zerdon)
+4000th stargazers | [sfwatergit](https://github.com/sfwatergit)
+5000th stargazers | [robgrzel](https://github.com/robgrzel)
 
 <!-- SpaceVim Achievements end -->
 

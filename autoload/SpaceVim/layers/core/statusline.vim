@@ -33,12 +33,6 @@ let s:i_separators = {
       \ 'nil' : ['', ''],
       \ }
 let s:loaded_modes = []
-if index(g:spacevim_plugin_groups, 'checkers') != -1
-  call add(s:loaded_modes, 'syntax-checking')
-endif
-if &cc ==# '80'
-  call add(s:loaded_modes, 'fill-column-indicator')
-endif
 let s:modes = {
       \ 'center-cursor': {
       \ 'icon' : '⊝',
@@ -81,6 +75,15 @@ let s:loaded_sections_l = g:spacevim_statusline_left_sections
 let [s:lsep , s:rsep] = get(s:separators, g:spacevim_statusline_separator, s:separators['arrow'])
 let [s:ilsep , s:irsep] = get(s:i_separators, g:spacevim_statusline_inactive_separator, s:i_separators['arrow'])
 
+if index(g:spacevim_plugin_groups, 'checkers') != -1
+  call add(s:loaded_modes, 'syntax-checking')
+endif
+if &cc ==# '80'
+  call add(s:loaded_modes, 'fill-column-indicator')
+endif
+if index(s:loaded_sections_r, 'whitespace') != -1
+  call add(s:loaded_modes, 'whitespace')
+endif
 " build in sections for SpaceVim statusline
 function! s:winnr(...) abort
   if a:0 > 1
@@ -351,11 +354,13 @@ function! SpaceVim#layers#core#statusline#get(...) abort
           \ . '%#SpaceVim_statusline_b_SpaceVim_statusline_c#' . s:lsep . ' '
           \ . '%#SpaceVim_statusline_c# %{unite#get_status_string()} '
   elseif &filetype ==# 'SpaceVimFlyGrep'
-    return '%#SpaceVim_statusline_a# FlyGrep %#SpaceVim_statusline_a_SpaceVim_statusline_b#' . s:lsep
-          \ . '%#SpaceVim_statusline_b# %{getcwd()}%#SpaceVim_statusline_b_SpaceVim_statusline_c#' . s:lsep
+    return '%#SpaceVim_statusline_a_bold# FlyGrep %#SpaceVim_statusline_a_SpaceVim_statusline_b#' . s:lsep
+          \ . '%#SpaceVim_statusline_b# %{getcwd()} %#SpaceVim_statusline_b_SpaceVim_statusline_c#' . s:lsep
           \ . '%#SpaceVim_statusline_c# %{SpaceVim#plugins#flygrep#lineNr()}'
   elseif &filetype ==# 'TransientState'
     return '%#SpaceVim_statusline_a# Transient State %#SpaceVim_statusline_a_SpaceVim_statusline_b#'
+  elseif &filetype ==# 'vimcalc'
+    return '%#SpaceVim_statusline_a#' . s:winnr() . ' VimCalc %#SpaceVim_statusline_a_SpaceVim_statusline_b#'
   elseif &filetype ==# 'HelpDescribe'
     return '%#SpaceVim_statusline_a# HelpDescribe %#SpaceVim_statusline_a_SpaceVim_statusline_b#'
   elseif &filetype ==# 'SpaceVimRunner'
@@ -576,9 +581,21 @@ endfunction
 
 function! SpaceVim#layers#core#statusline#mode(mode)
   let t = s:colors_template
-  if get(w:, 'spacevim_statusline_mode', '') != a:mode
+  let iedit_mode = get(w:, 'spacevim_iedit_mode', '')
+  let mode = get(w:, 'spacevim_statusline_mode', '')
+  if  mode != a:mode
     if a:mode == 'n'
-      exe 'hi! SpaceVim_statusline_a ctermbg=' . t[0][2] . ' ctermfg=' . t[0][3] . ' guibg=' . t[0][1] . ' guifg=' . t[0][0]
+      if !empty(iedit_mode)
+        if iedit_mode ==# 'n'
+          exe 'hi! SpaceVim_statusline_a ctermbg=' . t[8][3] . ' ctermfg=' . t[8][2] . ' guibg=' . t[8][1] . ' guifg=' . t[8][0]
+        elseif iedit_mode ==# 'i'
+          exe 'hi! SpaceVim_statusline_a ctermbg=' . t[7][3] . ' ctermfg=' . t[7][2] . ' guibg=' . t[7][1] . ' guifg=' . t[7][0]
+        else
+          exe 'hi! SpaceVim_statusline_a ctermbg=' . t[0][2] . ' ctermfg=' . t[0][3] . ' guibg=' . t[0][1] . ' guifg=' . t[0][0]
+        endif
+      else
+        exe 'hi! SpaceVim_statusline_a ctermbg=' . t[0][2] . ' ctermfg=' . t[0][3] . ' guibg=' . t[0][1] . ' guifg=' . t[0][0]
+      endif
     elseif a:mode == 'i'
       exe 'hi! SpaceVim_statusline_a ctermbg=' . t[4][3] . ' ctermfg=' . t[4][2] . ' guibg=' . t[4][1] . ' guifg=' . t[4][0]
     elseif a:mode == 'R'
@@ -593,7 +610,15 @@ function! SpaceVim#layers#core#statusline#mode(mode)
 endfunction
 
 function! SpaceVim#layers#core#statusline#mode_text(mode)
+  let iedit_mode = get(w:, 'spacevim_iedit_mode', '')
   if a:mode == 'n'
+    if !empty(iedit_mode)
+      if iedit_mode ==# 'n'
+        return 'IEDIT-NORMAL '
+      else
+        return 'IEDIT-INSERT '
+      endif
+    endif
     return 'NORMAL '
   elseif a:mode == 'i'
     return 'INSERT '

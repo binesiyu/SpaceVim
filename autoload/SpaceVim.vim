@@ -195,11 +195,18 @@ let g:spacevim_statusline_inactive_separator = 'arrow'
 "     \ 'version control info'
 "     \ ]
 " <
-let g:spacevim_statusline_left_sections = ['winnr', 'filename', 'major mode', 'syntax checking', 'minor mode lighters', 'version control info', 'hunks']
+let g:spacevim_statusline_left_sections = ['winnr', 'filename', 'major mode',
+      \ 'syntax checking', 'minor mode lighters',
+      \ 'version control info', 'hunks']
 ""
 " Define the right section of statusline in active windows. By default:
 " >
-"   let g:spacevim_statusline_right_sections = ['fileformat', 'cursorpos']
+"   g:spacevim_statusline_right_sections =
+"     \ [
+"     \ 'fileformat',
+"     \ 'cursorpos',
+"     \ 'percentage'
+"     \ ]
 " <
 let g:spacevim_statusline_right_sections = ['fileformat', 'cursorpos', 'percentage']
 
@@ -382,6 +389,9 @@ let g:spacevim_plugin_groups           = []
 " fuzzy find the repo you want.
 let g:spacevim_github_username         = ''
 ""
+" Set the default key for smart close windows, default is `q`.
+let g:spacevim_windows_smartclose      = 'q'
+""
 " Disable plugins by name.
 " >
 "   let g:spacevim_disabled_plugins = ['vim-foo', 'vim-bar']
@@ -396,6 +406,12 @@ let g:spacevim_disabled_plugins        = []
 "               \ ]
 " <
 let g:spacevim_custom_plugins          = []
+""
+" change the default filetype icon for a specific filtype.
+" >
+"   let g:spacevim_filetype_icons['md'] = ''
+" <
+let g:spacevim_filetype_icons           = {}
 ""
 " SpaceVim will load the global config after local config if set to 1. Default
 " is 0. If you have a local config, the global config will not be loaded. 
@@ -413,6 +429,13 @@ let g:spacevim_enable_powerline_fonts  = 1
 " <
 let g:spacevim_lint_on_save            = 1
 let g:spacevim_search_tools            = ['rg', 'ag', 'pt', 'ack', 'grep']
+""
+" Set the project rooter patterns, by default it is
+" `['.git/', '_darcs/', '.hg/', '.bzr/', '.svn/']`
+let g:spacevim_project_rooter_patterns = ['.git/', '_darcs/', '.hg/', '.bzr/', '.svn/']
+""
+" Enable/Disable changing directory automatically. Enabled by default.
+let g:spacevim_project_rooter_automatically = 1
 ""
 " Enable/Disable lint on the fly feature of SpaceVim's maker. Default is 0.
 " >

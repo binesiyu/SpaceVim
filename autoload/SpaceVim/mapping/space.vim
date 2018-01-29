@@ -36,11 +36,15 @@ function! SpaceVim#mapping#space#init() abort
   endif
   nnoremap <silent><nowait> [SPC] :<c-u>LeaderGuide " "<CR>
   vnoremap <silent><nowait> [SPC] :<c-u>LeaderGuideVisual " "<CR>
-  nmap <Space> [SPC]
-  vmap <Space> [SPC]
+  nmap , [SPC]
+  vmap , [SPC]
+  nmap ; :
+  vmap ; :
+  " nmap <Space> [SPC]
+  " vmap <Space> [SPC]
   if g:spacevim_enable_language_specific_leader
-    nmap , [SPC]l
-    xmap , [SPC]l
+    nmap <Space> [SPC]l
+    xmap <Space> [SPC]l
   endif
   " Windows
   for i in range(1, 9)

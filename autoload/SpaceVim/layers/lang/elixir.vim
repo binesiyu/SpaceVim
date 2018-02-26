@@ -1,3 +1,11 @@
+"=============================================================================
+" elixir.vim --- SpaceVim lang#elixir layer
+" Copyright (c) 2016-2017 Wang Shidong & Contributors
+" Author: Wang Shidong < wsdjeg at 163.com >
+" URL: https://spacevim.org
+" License: GPLv3
+"=============================================================================
+
 ""
 " @section lang#elixir, layer-lang-elixir
 " @parentsection layers
@@ -9,7 +17,7 @@
 
 function! SpaceVim#layers#lang#elixir#plugins() abort
   let plugins = []
-  call add(plugins, ['elixir-editors/vim-elixir', {'on_ft' : 'elixir'}])
+  call add(plugins, ['elixir-editors/vim-elixir', {'on_ft' : ['elixir', 'eelixir']}])
   call add(plugins, ['slashmili/alchemist.vim', {'on_ft' : 'elixir'}])
   return plugins
 endfunction

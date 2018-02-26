@@ -1,3 +1,11 @@
+"=============================================================================
+" custom.vim --- custom API in SpaceVim
+" Copyright (c) 2016-2017 Wang Shidong & Contributors
+" Author: Wang Shidong < wsdjeg at 163.com >
+" URL: https://spacevim.org
+" License: GPLv3
+"=============================================================================
+
 function! SpaceVim#custom#profile(dict) abort
     for key in keys(a:dict)
         call s:set(key, a:dict[key])
@@ -32,14 +40,14 @@ endfunction
 
 function! s:awesome_mode() abort
     let sep = SpaceVim#api#import('file').separator
-    let f = fnamemodify(g:Config_Main_Home, ':h') . join(['', 'mode', 'dark_powered.vim'], sep)
+    let f = fnamemodify(g:_spacevim_root_dir, ':h') . join(['', 'mode', 'dark_powered.vim'], sep)
     let config = readfile(f, '')
     call s:write_to_config(config)
 endfunction
 
 function! s:basic_mode() abort
     let sep = SpaceVim#api#import('file').separator
-    let f = fnamemodify(g:Config_Main_Home, ':h') . join(['', 'mode', 'basic.vim'], sep)
+    let f = fnamemodify(g:_spacevim_root_dir, ':h') . join(['', 'mode', 'basic.vim'], sep)
     let config = readfile(f, '')
     call s:write_to_config(config)
 endfunction

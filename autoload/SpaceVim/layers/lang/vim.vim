@@ -1,3 +1,12 @@
+"=============================================================================
+" vim.vim --- SpaceVim vim layer
+" Copyright (c) 2016-2017 Wang Shidong & Contributors
+" Author: Wang Shidong < wsdjeg at 163.com >
+" URL: https://spacevim.org
+" License: GPLv3
+"=============================================================================
+
+
 function! SpaceVim#layers#lang#vim#plugins() abort
   let plugins = [
         \ ['syngan/vim-vimlint',                     { 'on_ft' : 'vim'}],
@@ -20,6 +29,7 @@ endfunction
 function! SpaceVim#layers#lang#vim#config() abort
   call SpaceVim#mapping#gd#add('vim','lookup#lookup')
   call SpaceVim#mapping#space#regesit_lang_mappings('vim', function('s:language_specified_mappings'))
+  call SpaceVim#plugins#highlight#reg_expr('vim', '^\s*\(func\|fu\|function\)!\?\s\+', '^\s*\(endfunc\|endf\|endfunction\)')
 endfunction
 
 function! s:language_specified_mappings() abort

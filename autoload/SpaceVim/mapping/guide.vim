@@ -1,9 +1,9 @@
 "=============================================================================
-" guide.vim --- mappings guide helper for SpaceVim
-" Copyright (c) 2016-2017 Shidong Wang & Contributors
-" Author: Shidong Wang < wsdjeg at 163.com >
+" guide.vim --- key binding guide for SpaceVim
+" Copyright (c) 2016-2017 Wang Shidong & Contributors
+" Author: Wang Shidong < wsdjeg at 163.com >
 " URL: https://spacevim.org
-" License: MIT license
+" License: GPLv3
 "=============================================================================
 
 let s:save_cpo = &cpo

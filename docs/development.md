@@ -11,6 +11,7 @@ description: "General contributing guidelines and changelog of SpaceVim, includi
 - [Reporting issues](#reporting-issues)
 - [Contributing code](#contributing-code)
   - [License](#license)
+  - [Bootstrap](#bootstrap)
   - [Conventions](#conventions)
   - [Pull Request](#pull-request)
     - [Rebase your pr Branch on top of upstream master:](#rebase-your-pr-branch-on-top-of-upstream-master)
@@ -63,12 +64,19 @@ Code contributions are welcome. Please read the following sections carefully. In
 
 ### License
 
-The license is MIT for all the parts of SpaceVim. this includes:
+The license is GPLv3 for all the parts of SpaceVim. this includes:
 
-- The initialization and core files
+- The initialization and core files.
 - All the layer files.
+- The documentation
 
 For files not belonging to SpaceVim like local packages and libraries, refer to the header file. Those files should not have an empty header, we may not accept code without a proper header file.
+
+### Bootstrap
+
+Before contributing to SpaceVim, you should know how does SpaceVim bootstrap, here is the logic of the bootstrap when SpaceVim startup.
+
+<!-- TODO -->
 
 ### Conventions
 
@@ -165,7 +173,7 @@ The file header for vim script should look like the following template:
 " Copyright (c) 2012-2016 Shidong Wang & Contributors
 " Author: YOUR NAME <YOUR EMAIL>
 " URL: https://spacevim.org
-" License: MIT license
+" License: GPLv3
 "=============================================================================
 ```
 
@@ -187,7 +195,7 @@ here is an example for creating a new layer names `foo`:
 " Copyright (c) 2012-2016 Shidong Wang & Contributors
 " Author: Shidong Wang < wsdjeg at 163.com >
 " URL: https://spacevim.org
-" License: MIT license
+" License: GPLv3
 "=============================================================================
 
 ""

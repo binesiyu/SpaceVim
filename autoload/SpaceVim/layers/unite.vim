@@ -52,6 +52,11 @@ function! SpaceVim#layers#unite#config() abort
         \ . string(s:_function('s:run_shell_cmd_project')) . ', [])',
         \ 'shell cmd(project root)', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['T', 's'], 'Unite colorscheme', 'fuzzy find colorschemes', 1)
+  if has('nvim')
+    nnoremap <silent> <C-p> :Unite file_rec/neovim<cr>
+  else
+    nnoremap <silent> <C-p> :Unite file_rec/async<cr>
+  endif
   let g:_spacevim_mappings.f = {'name' : '+Fuzzy Finder'}
   call s:defind_fuzzy_finder()
 endfunction
@@ -70,31 +75,6 @@ function! s:defind_fuzzy_finder() abort
         \ 'Definition: ' . s:file . ':' . lnum,
         \ ]
         \ ]
-  if has('nvim')
-    nnoremap <silent> <Leader>ff
-          \ :<C-u>Unite file_rec/neovim<cr>
-    let lnum = expand('<slnum>') + s:unite_lnum - 4
-    let g:_spacevim_mappings.f.f = ['Unite file_rec/neovim',
-          \ 'fuzzy find file',
-          \ [
-          \ '[Leader f f ] is to fuzzy find file',
-          \ '',
-          \ 'Definition: ' . s:file . ':' . lnum,
-          \ ]
-          \ ]
-  else
-    nnoremap <silent> <Leader>ff
-          \ :<C-u>Unite file_rec/async<cr>
-    let lnum = expand('<slnum>') + s:unite_lnum - 4
-    let g:_spacevim_mappings.f.f = ['Unite file_rec/async',
-          \ 'fuzzy find file',
-          \ [
-          \ '[Leader f f ] is to fuzzy find file',
-          \ '',
-          \ 'Definition: ' . s:file . ':' . lnum,
-          \ ]
-          \ ]
-  endif
   nnoremap <silent> <Leader>fe  :<C-u>Unite
         \ -buffer-name=register register<CR>
   let lnum = expand('<slnum>') + s:unite_lnum - 4
@@ -167,6 +147,17 @@ function! s:defind_fuzzy_finder() abort
         \ 'fuzzy find outline',
         \ [
         \ '[Leader f o] is to fuzzy find outline',
+        \ '',
+        \ 'Definition: ' . s:file . ':' . lnum,
+        \ ]
+        \ ]
+  nnoremap <silent> <Leader>f<Space>
+        \ :<C-u>Unite menu:CustomKeyMaps<CR>
+  let lnum = expand('<slnum>') + s:unite_lnum - 4
+  let g:_spacevim_mappings.f['<Space>'] = ['Unite menu:CustomKeyMaps',
+        \ 'fuzzy find custom key bindings',
+        \ [
+        \ '[Leader f SPC] is to fuzzy find custom key bindings',
         \ '',
         \ 'Definition: ' . s:file . ':' . lnum,
         \ ]

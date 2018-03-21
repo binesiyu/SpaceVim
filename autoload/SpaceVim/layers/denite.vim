@@ -31,9 +31,9 @@ let s:file = expand('<sfile>:~')
 let s:unite_lnum = expand('<slnum>') + 3
 function! s:defind_fuzzy_finder() abort
   nnoremap <silent> <Leader>fr
-        \ :<C-u>Denite -buffer-name=resume resume<CR>
+        \ :<C-u>Denite -resume<CR>
   let lnum = expand('<slnum>') + s:unite_lnum - 4
-  let g:_spacevim_mappings.f.r = ['Denite -buffer-name=resume resume',
+  let g:_spacevim_mappings.f.r = ['Denite -resume',
         \ 'resume unite window',
         \ [
         \ '[Leader f r ] is to resume unite window',
@@ -44,7 +44,7 @@ function! s:defind_fuzzy_finder() abort
   nnoremap <silent> <Leader>fe
         \ :<C-u>Denite register<CR>
   let lnum = expand('<slnum>') + s:unite_lnum - 4
-  let g:_spacevim_mappings.f.r = ['Denite register',
+  let g:_spacevim_mappings.f.e = ['Denite register',
         \ 'fuzzy find registers',
         \ [
         \ '[Leader f r ] is to resume unite window',
@@ -113,6 +113,15 @@ function! s:defind_fuzzy_finder() abort
         \ 'fuzzy find outline',
         \ [
         \ '[Leader f o] is to fuzzy find outline',
+        \ '',
+        \ 'Definition: ' . s:file . ':' . lnum,
+        \ ]
+        \ ]
+  nnoremap <silent> <Leader>f<Space> :Denite menu:CustomKeyMaps<CR>
+  let g:_spacevim_mappings.f['<Space>'] = ['Denite menu:CustomKeyMaps',
+        \ 'fuzzy find custom key bindings',
+        \ [
+        \ '[Leader f SPC] is to fuzzy find custom key bindings',
         \ '',
         \ 'Definition: ' . s:file . ':' . lnum,
         \ ]

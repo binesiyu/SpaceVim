@@ -63,6 +63,7 @@ description: "General documentation about how to using SpaceVim, including the q
     - [With an external tool](#with-an-external-tool)
       - [Useful key bindings](#useful-key-bindings)
       - [Searching in current file](#searching-in-current-file)
+      - [Searching in buffer directory](#searching-in-buffer-directory)
       - [Searching in all loaded buffers](#searching-in-all-loaded-buffers)
       - [Searching in an arbitrary directory](#searching-in-an-arbitrary-directory)
       - [Searching in a project](#searching-in-a-project)
@@ -1257,6 +1258,7 @@ The available scopes and corresponding keys are:
 | Scope                      | Key |
 | -------------------------- | --- |
 | opened buffers             | b   |
+| buffer directory           | d   |
 | files in a given directory | f   |
 | current project            | p   |
 
@@ -1289,6 +1291,23 @@ Notes:
 | `SPC s g G` | grep with default input                             |
 | `SPC s r r` | rg                                                  |
 | `SPC s r R` | rg with default input                               |
+
+##### Searching in buffer directory
+
+| Key Binding | Description                                                 |
+| ----------- | ----------------------------------------------------------- |
+| `SPC s d`   | searching in buffer directory with default tool             |
+| `SPC s D`   | searching in buffer directory cursor word with default tool |
+| `SPC s a d` | searching in buffer directory with ag                       |
+| `SPC s a D` | searching in buffer directory cursor word with ag           |
+| `SPC s g d` | searching in buffer directory with grep                     |
+| `SPC s g D` | searching in buffer directory cursor word with grep         |
+| `SPC s k d` | searching in buffer directory with ack                      |
+| `SPC s k D` | searching in buffer directory cursor word with ack          |
+| `SPC s r d` | searching in buffer directory with rg                       |
+| `SPC s r D` | searching in buffer directory cursor word with rg           |
+| `SPC s t d` | searching in buffer directory with pt                       |
+| `SPC s t D` | searching in buffer directory cursor word with pt           |
 
 ##### Searching in all loaded buffers
 

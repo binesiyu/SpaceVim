@@ -257,13 +257,11 @@ function! SpaceVim#default#keyBindings() abort
   nnoremap <silent><Down> gj
   nnoremap <silent><Up> gk
 
-
-  " Use Q format lines
-  map Q gq
-
   " Navigate window
   nnoremap <silent><C-q> <C-w>
-  nnoremap <silent><C-x> <C-w>x
+  if !g:spacevim_vimcompatible
+    nnoremap <silent><C-x> <C-w>x
+  endif
 
   " Navigation in command line
   cnoremap <C-a> <Home>
@@ -313,8 +311,6 @@ function! SpaceVim#default#keyBindings() abort
 
   call SpaceVim#mapping#def('nnoremap <silent>', '<C-c>', ':<c-u>call zvim#util#CopyToClipboard()<cr>',
         \ 'Copy buffer absolute path to X11 clipboard','call zvim#util#CopyToClipboard()')
-  call SpaceVim#mapping#def('nnoremap <silent>', '<Tab>', ':wincmd w<CR>', 'Switch to next window or tab','wincmd w')
-  call SpaceVim#mapping#def('nnoremap <silent>', '<S-Tab>', ':wincmd p<CR>', 'Switch to previous window or tab','wincmd p')
 endfunction
 
 fu! s:tobur(num) abort

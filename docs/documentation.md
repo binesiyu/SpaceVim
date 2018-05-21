@@ -12,13 +12,13 @@ description: "General documentation about how to using SpaceVim, including the q
 - [Screenshots](#screenshots)
 - [Who can benefit from this?](#who-can-benefit-from-this)
 - [Update and Rollback](#update-and-rollback)
-    - [Update SpaceVim itself](#update-spacevim-itself)
-    - [Update plugins](#update-plugins)
-    - [Get SpaceVim log](#get-spacevim-log)
-- [Configuration layers](#configuration-layers)
+  - [Update SpaceVim itself](#update-spacevim-itself)
+  - [Update plugins](#update-plugins)
+  - [Get SpaceVim log](#get-spacevim-log)
 - [Custom Configuration](#custom-configuration)
+  - [Vim Compatible Mode](#vim-compatible-mode)
+  - [Private Layers](#private-layers)
 - [Concepts](#concepts)
-- [Differences between vim/neovim and SpaceVim](#differences-between-vimneovim-and-spacevim)
 - [Interface elements](#interface-elements)
   - [Colorschemes](#colorschemes)
   - [Font](#font)
@@ -117,11 +117,11 @@ Community-driven configuration provides curated packages tuned by power users an
 ## Highlighted features
 
 - **Great documentation:** access documentation in Vim with
-    <kbd>:h SpaceVim</kbd>.
+    `:h SpaceVim`.
 - **Minimalistic and nice graphical UI:** you'll love the awesome UI and its useful features.
 - **Keep your fingers on the home row:** for quicker editing with support for QWERTY and BEPO layouts.
 - **Mnemonic key bindings:** commands have mnemonic prefixes like
-    <kbd>[Window]</kbd> for all the window and buffer commands or <kbd>[Unite]</kbd> for the
+    `[Window]` for all the window and buffer commands or `[Unite]` for the
     unite work flow commands.
 - **Fast boot time:** Lazy-load 90% of plugins with [dein.vim]
 - **Lower the risk of RSI:** by heavily using the space bar instead of modifiers.
@@ -158,7 +158,7 @@ to get more screenshots, see: [issue #415](https://github.com/SpaceVim/SpaceVim/
 
 ## Update and Rollback
 
-#### Update SpaceVim itself
+### Update SpaceVim itself
 
 There are several methods of updating the core files of SpaceVim. It is recommended to update the packages first; see the next section.
 
@@ -178,41 +178,21 @@ To update manually close Vim and update the git repository:
 
 `git -C ~/.SpaceVim pull`.
 
-#### Update plugins
+### Update plugins
 
-Use `:SPUpdate` command will update all the plugins and SpaceVim itself. after `:SPUpdate`, you can assign plugins need to be updated. Use <kbd>Tab</kbd> to complete plugin names after `:SPUpdate`.
+Use `:SPUpdate` command will update all the plugins and SpaceVim itself. after `:SPUpdate`, you can assign plugins need to be updated. Use `Tab` to complete plugin names after `:SPUpdate`.
 
-#### Get SpaceVim log
+### Get SpaceVim log
 
-Use `:SPDebugInfo!` command will desplay the log of SpaceVim. You also can use `SPC h I` to open a buffer with issue template.
-
-## Configuration layers
-
-This section is an overview of layers. A more extensive introduction to writing configuration layers can be found in [SpaceVim's layers page](http://spacevim.org/layers/) (recommended reading!).
-
-**Purpose**
-
-Layers help collect related packages together to provide features. For example, the `lang#python` layer provides auto-completion, syntax checking, and REPL support for python files. This approach helps keep configuration organized and reduces overhead for the user by keeping them from having to think about what packages to install. To install all the `python` features the user has just to add the `lang#python` layer to their custom configuration file.
-
-**Structure**
-
-In SpaceVim, a layer is a single file. In a layer, for example, `autocomplete` layer, the file is `autoload/SpaceVim/layers/autocomplete.vim`, and there are there public functions:
-
-- `SpaceVim#layers#autocomplete#plugins()`: return a list of plugins used in this plugins.
-- `SpaceVim#layers#autocomplete#config()`: layer config, such as key bindings and autocmds.
-- `SpaceVim#layers#autocomplete#set_variable()`: function for setting layer options.
+Use `:SPDebugInfo!` command will display the log of SpaceVim. You also can use `SPC h I` to open a buffer with issue template.
 
 ## Custom Configuration
 
-User configuration can be stored in your ~/.SpaceVim.d directory.
+The very first time SpaceVim starts up, it will ask you to choose a mode,
+then create the `SpaceVim.d/init.toml` in your `HOME` directory. All User
+configuration can be stored in your `~/.SpaceVim.d` directory.
 
-**Automatic Generation**
-
-The very first time SpaceVim starts up, it will ask you several questions and then create the `SpaceVim.d/init.toml` in your `HOME` directory.
-
-**Alternative directory**
-
-`~/.SpaceVim.d/` will be added to `&runtimepath` of vim. read <kbd>:h rtp</kbd>.
+`~/.SpaceVim.d/` will be added to `&runtimepath` of vim.
 
 It is also possible to override the location of `~/.SpaceVim.d/` using the environment
 variable `SPACEVIMDIR`. Of course you can also use symlinks to change the location of
@@ -221,30 +201,10 @@ this directory.
 SpaceVim also support local config file for project, the init file is `.SpaceVim.d/init.toml`
 in the root of your project. `.SpaceVim.d/` will also be added into runtimepath.
 
-here is an example config file for SpaceVim:
+All SpaceVim options can be found in `:h SpaceVim-config`, the key is same as
+the option name(just remove `g:spacevim_` prefix).
 
-```toml
-# This is basic configuration example for SpaceVim
-
-[option]
-    colorscheme = "gruvbox"
-    background = "dark"
-    guicolors = true
-    statusline_separator = "nil"
-    statusline_separator = "bar"
-    buffer_index_type = 4
-    filetype_icon = false
-    statusline_display_mode = false
-
-[[layers]]
-    [checkers]
-    [shell]
-        default_position = "top"
-        default_height = 30
-    [lang/java]
-```
-
-Comprehensive documentation is available for each layer by <kbd>:h SpaceVim</kbd>.
+Comprehensive documentation is available for each layer by `:h SpaceVim`.
 
 if you want to add custom `SPC` prefix key bindings, you can add this to SpaceVim configuration file, **be sure** the key bindings is not used in SpaceVim.
 
@@ -252,20 +212,9 @@ if you want to add custom `SPC` prefix key bindings, you can add this to SpaceVi
 call SpaceVim#custom#SPCGroupName(['G'], '+TestGroup')
 call SpaceVim#custom#SPC('nore', ['G', 't'], 'echom 1', 'echomessage 1', 1)
 ```
+### Vim Compatible Mode
 
-## Concepts
-
-**Transient-states**
-
-SpaceVim defines a wide variety of transient states (temporary overlay maps) where it makes sense. This prevents one from doing repetitive and tedious presses on the SPC key.
-
-When a transient state is active, a documentation is displayed in the transient state buffer. Additional information may as well be displayed in it.
-
-Move Text Transient State:
-
-![Move Text Transient State](https://user-images.githubusercontent.com/13142418/28489559-4fbc1930-6ef8-11e7-9d5a-716fe8dbb881.png)
-
-## Differences between vim/neovim and SpaceVim
+This a list of different key bindings between SpaceVim and origin vim.
 
 - The `s` key does replace cursor char, but in SpaceVim it is the `Window` key bindings specific leader key by default (which can be set on another key binding in dotfile). If you still prefer the origin function of `s`, you can use an empty string to disable this feature.
 
@@ -281,7 +230,39 @@ the option is `g:spacevim_windows_smartclose`, default value is `q`. If you stil
 
 [Send a PR](http://spacevim.org/development/) to add the differences you found in this section.
 
-If you still want to use this origin function, you can enable vimcompatible mode, via `let g:spacevim_vimcompatible = 1`.
+If you still want to use this origin function, you can enable vimcompatible mode, via `vimcompatible = 1` in `[options]` section.
+
+### Private Layers
+
+This section is an overview of layers. A more extensive introduction to writing configuration layers can be found in [SpaceVim's layers page](http://spacevim.org/layers/) (recommended reading!).
+
+**Purpose**
+
+Layers help collect related packages together to provide features. For example, the `lang#python` layer provides auto-completion, syntax checking, and REPL support for python files. This approach helps keep configuration organized and reduces overhead for the user by keeping them from having to think about what packages to install. To install all the `python` features the user has just to add the `lang#python` layer to their custom configuration file.
+
+**Structure**
+
+In SpaceVim, a layer is a single file. In a layer, for example, `autocomplete` layer, the file is `autoload/SpaceVim/layers/autocomplete.vim`, and there are there public functions:
+
+- `SpaceVim#layers#autocomplete#plugins()`: return a list of plugins used in this plugins.
+- `SpaceVim#layers#autocomplete#config()`: layer config, such as key bindings and autocmds.
+- `SpaceVim#layers#autocomplete#set_variable()`: function for setting layer options.
+
+## Concepts
+
+**Transient-states**
+
+SpaceVim defines a wide variety of transient states (temporary overlay maps)
+where it makes sense. This prevents one from doing repetitive and tedious
+presses on the SPC key.
+
+When a transient state is active, a documentation is displayed in the
+transient state buffer. Additional information may as well be displayed in it.
+
+Move Text Transient State:
+
+![Move Text Transient State](https://user-images.githubusercontent.com/13142418/28489559-4fbc1930-6ef8-11e7-9d5a-716fe8dbb881.png)
+
 
 ## Interface elements
 
@@ -292,7 +273,7 @@ SpaceVim has a minimalistic and distraction free UI:
 
 ### Colorschemes
 
-The default colorscheme of SpaceVim is [gruvbox](https://github.com/morhetz/gruvbox). There are two variants of this colorscheme, a dark one and a light one. Some aspects of these colorscheme can be customized in the custom configuration file, read <kbd>:h gruvbox</kbd>.
+The default colorscheme of SpaceVim is [gruvbox](https://github.com/morhetz/gruvbox). There are two variants of this colorscheme, a dark one and a light one. Some aspects of these colorscheme can be customized in the custom configuration file, read `:h gruvbox`.
 
 It is possible to define your default themes in your `~/.SpaceVim.d/init.vim` with the variable colorschemes. For instance, to specify [vim-one with dark colorscheme](https://github.com/rakr/vim-one):
 
@@ -303,8 +284,8 @@ let g:spacevim_colorscheme_bg = 'dark'
 
 | Mappings           | Description                                                    |
 | ------------------ | -------------------------------------------------------------- |
-| <kbd>SPC T n</kbd> | switch to next random colorscheme listed in colorscheme layer. |
-| <kbd>SPC T s</kbd> | select a theme using a unite buffer.                           |
+| `SPC T n` | switch to next random colorscheme listed in colorscheme layer. |
+| `SPC T s` | select a theme using a unite buffer.                           |
 
 all the included colorscheme can be found in [colorscheme layer](http://spacevim.org/layers/colorscheme/).
 
@@ -330,21 +311,21 @@ Some UI indicators can be toggled on and off (toggles start with t and T):
 
 | Key Binding | Description                                                       |
 | ----------- | ----------------------------------------------------------------- |
-| SPC t 8     | highlight any character past the 80th column                      |
-| SPC t f     | display the fill column (by default the fill column is set to 80) |
-| SPC t h h   | toggle highlight of the current line                              |
-| SPC t h i   | toggle highlight indentation levels (TODO)                        |
-| SPC t h c   | toggle highlight indentation current column                       |
-| SPC t h s   | toggle syntax highlighting                                        |
-| SPC t i     | toggle indentation guide at point                                 |
-| SPC t n     | toggle line numbers                                               |
-| SPC t b     | toggle background                                                 |
-| SPC t t     | open tabs manager                                                 |
-| SPC T ~     | display ~ in the fringe on empty lines                            |
-| SPC T F     | toggle frame fullscreen                                           |
-| SPC T f     | toggle display of the fringe                                      |
-| SPC T m     | toggle menu bar                                                   |
-| SPC T t     | toggle tool bar                                                   |
+| `SPC t 8`   | highlight any character past the 80th column                      |
+| `SPC t f`   | display the fill column (by default the fill column is set to 80) |
+| `SPC t h h` | toggle highlight of the current line                              |
+| `SPC t h i` | toggle highlight indentation levels (TODO)                        |
+| `SPC t h c` | toggle highlight indentation current column                       |
+| `SPC t h s` | toggle syntax highlighting                                        |
+| `SPC t i`   | toggle indentation guide at point                                 |
+| `SPC t n`   | toggle line numbers                                               |
+| `SPC t b`   | toggle background                                                 |
+| `SPC t t`   | open tabs manager                                                 |
+| `SPC T ~`   | display ~ in the fringe on empty lines                            |
+| `SPC T F`   | toggle frame fullscreen                                           |
+| `SPC T f`   | toggle display of the fringe                                      |
+| `SPC T m`   | toggle menu bar                                                   |
+| `SPC T t`   | toggle tool bar                                                   |
 
 ### Statusline
 
@@ -572,8 +553,8 @@ can change it via `g:spacevim_windows_leader`
 | `<leader>`+`sv` | Split with previous buffer                                                                                                                                                                                                     |
 | `<leader>`+`sg` | Vertically split with previous buffer                                                                                                                                                                                          |
 
-SpaceVim has mapped normal <kbd>q</kbd> as smart buffer close, the normal func of <kbd>q</kbd>
-can be get by <kbd><leader> q r</kbd>
+SpaceVim has mapped normal `q` as smart buffer close, the normal func of `q`
+can be get by `<leader> q r`
 
 | Key                   |      Mode     | Action                                                                         |
 | --------------------- | :-----------: | ------------------------------------------------------------------------------ |
@@ -778,18 +759,18 @@ then use `<Tab>` or `<Up>` and `<Down>` to select the mapping, press `<Enter>` w
 
 Denite/Unite is powerful tool to  unite all interfaces. it was meant to be like [Helm](https://github.com/emacs-helm/helm) for Vim. These mappings is for getting help info about functions, variables etc:
 
-| Mappings  | Description                                                      |
-| --------- | ---------------------------------------------------------------- |
-| SPC h SPC | discover SpaceVim documentation, layers and packages using unite |
-| SPC h i   | get help with the symbol at point                                |
-| SPC h k   | show top-level bindings with which-key                           |
-| SPC h m   | search available man pages                                       |
+| Mappings    | Description                                                      |
+| ---------   | ---------------------------------------------------------------- |
+| `SPC h SPC` | discover SpaceVim documentation, layers and packages using unite |
+| `SPC h i`   | get help with the symbol at point                                |
+| `SPC h k`   | show top-level bindings with which-key                           |
+| `SPC h m`   | search available man pages                                       |
 
 Reporting an issue:
 
 | Mappings | Description                                                 |
 | -------- | ----------------------------------------------------------- |
-| SPC h I  | Open SpaceVim GitHub issue page with pre-filled information |
+| `SPC h I`| Open SpaceVim GitHub issue page with pre-filled information |
 
 #### Available layers
 

@@ -1,10 +1,11 @@
 ---
 title: "Use Vim as a Java IDE"
-categories: tutorials
+categories: [tutorials, blog]
 excerpt: "I am a vimmer and a java developer. Here are some useful plugins for developing java in vim/neovim."
 redirect_from: "/2017/02/11/use-vim-as-a-java-ide.html"
 type: BlogPosting
 comments: true
+commentsID: "Use Vim as a Java IDE"
 ---
 
 # [Blogs](https://spacevim.org/community#blogs) > Use Vim as a Java IDE

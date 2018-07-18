@@ -142,7 +142,6 @@ function! SpaceVim#default#layers() abort
   call SpaceVim#layers#load('core#banner')
   call SpaceVim#layers#load('core#statusline')
   call SpaceVim#layers#load('core#tabline')
-  call SpaceVim#layers#load('sudo')
 endfunction
 
 function! SpaceVim#default#keyBindings() abort
@@ -297,8 +296,8 @@ function! SpaceVim#default#keyBindings() abort
   nnoremap <silent><M-3> :<C-u>call <SID>tobur(3)<CR>
   nnoremap <silent><M-4> :<C-u>call <SID>tobur(4)<CR>
   nnoremap <silent><M-5> :<C-u>call <SID>tobur(5)<CR>
-  nnoremap <silent><M-Right> :<C-U>call <SID>tobur("bnext")<CR>
-  nnoremap <silent><M-Left> :<C-U>call <SID>tobur("bprev")<CR>
+  nnoremap <silent><M-Right> :<C-U>call <SID>tobur("next")<CR>
+  nnoremap <silent><M-Left> :<C-U>call <SID>tobur("prev")<CR>
 
   call SpaceVim#mapping#def('nnoremap <silent>','<M-x>',':call chat#qq#OpenMsgWin()<cr>',
         \ 'Open qq chatting room','call chat#chatting#OpenMsgWin()')
@@ -315,10 +314,19 @@ endfunction
 
 fu! s:tobur(num) abort
   if index(get(g:,'spacevim_altmoveignoreft',[]), &filetype) == -1
-    if a:num ==# 'bnext'
-      bnext
-    elseif a:num ==# 'bprev'
-      bprev
+    if a:num ==# 'next'
+      if tabpagenr('$') > 1
+        tabnext
+      else
+        bnext
+      endif
+
+    elseif a:num ==# 'prev'
+      if tabpagenr('$') > 1
+        tabprevious
+      else
+        bprev
+      endif
     else
       let ls = split(execute(':ls'), "\n")
       let buffers = []

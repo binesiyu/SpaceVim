@@ -10,6 +10,7 @@
 let s:VIM_CO = SpaceVim#api#import('vim#compatible')
 let s:JOB = SpaceVim#api#import('job')
 let s:LIST = SpaceVim#api#import('data#list')
+let s:SYS = SpaceVim#api#import('system')
 
 
 " init values
@@ -37,7 +38,7 @@ function! s:install_manager() abort
     "auto install neobundle
     if filereadable(expand(g:spacevim_plugin_bundle_dir)
           \ . 'neobundle.vim'. s:Fsep. 'README.md')
-      let g:spacevim_neobundle_installed = 1
+      let g:_spacevim_neobundle_installed = 1
     else
       if s:need_cmd('git')
         call s:VIM_CO.system([
@@ -46,7 +47,7 @@ function! s:install_manager() abort
               \ 'https://github.com/Shougo/neobundle.vim',
               \ expand(g:spacevim_plugin_bundle_dir) . 'neobundle.vim'
               \ ])
-        let g:spacevim_neobundle_installed = 1
+        let g:_spacevim_neobundle_installed = 1
       endif
     endif
     exec 'set runtimepath+='
@@ -58,7 +59,7 @@ function! s:install_manager() abort
           \ . join(['repos', 'github.com',
           \ 'Shougo', 'dein.vim', 'README.md'],
           \ s:Fsep))
-      let g:spacevim_dein_installed = 1
+      let g:_spacevim_dein_installed = 1
     else
       if s:need_cmd('git')
         call s:VIM_CO.system([
@@ -69,7 +70,7 @@ function! s:install_manager() abort
               \ . join(['repos', 'github.com',
               \ 'Shougo', 'dein.vim"'], s:Fsep)
               \ ])
-        let g:spacevim_dein_installed = 1
+        let g:_spacevim_dein_installed = 1
       endif
     endif
     exec 'set runtimepath+='. fnameescape(g:spacevim_plugin_bundle_dir)
@@ -78,7 +79,7 @@ function! s:install_manager() abort
   elseif g:spacevim_plugin_manager ==# 'vim-plug'
     "auto install vim-plug
     if filereadable(expand('~/.cache/vim-plug/autoload/plug.vim'))
-      let g:spacevim_vim_plug_installed = 1
+      let g:_spacevim_vim_plug_installed = 1
     else
       if s:need_cmd('curl')
 
@@ -89,7 +90,7 @@ function! s:install_manager() abort
               \ '--create-dirs',
               \ 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
               \ ])
-        let g:spacevim_vim_plug_installed = 1
+        let g:_spacevim_vim_plug_installed = 1
       endif
     endif
     exec 'set runtimepath+=~/.cache/vim-plug/'
@@ -110,7 +111,7 @@ function! s:get_uninstalled_plugins() abort
 endfunction
 
 
-function! SpaceVim#plugins#manager#reinstall(...)
+function! SpaceVim#plugins#manager#reinstall(...) abort
   call dein#reinstall(a:1)
 endfunction
 
@@ -149,7 +150,7 @@ function! SpaceVim#plugins#manager#install(...) abort
     call s:set_buf_line(s:plugin_manager_buffer, 3, '')
   endif
   let s:start_time = reltime()
-  for i in range(g:spacevim_plugin_manager_max_processes)
+  for i in range(g:spacevim_plugin_manager_processes)
     if !empty(s:plugins)
       let repo = dein#get(s:LIST.shift(s:plugins))
       if !empty(repo)
@@ -200,7 +201,7 @@ function! SpaceVim#plugins#manager#update(...) abort
     call s:set_buf_line(s:plugin_manager_buffer, 3, '')
   endif
   let s:start_time = reltime()
-  for i in range(g:spacevim_plugin_manager_max_processes)
+  for i in range(g:spacevim_plugin_manager_processes)
     if !empty(s:plugins)
       let reponame = s:LIST.shift(s:plugins)
       let repo = dein#get(reponame)
@@ -209,7 +210,7 @@ function! SpaceVim#plugins#manager#update(...) abort
       elseif reponame ==# 'SpaceVim'
         let repo = {
               \ 'name' : 'SpaceVim',
-              \ 'path' : fnamemodify(g:Config_Main_Home, ':h')
+              \ 'path' : fnamemodify(g:_spacevim_root_dir, ':h')
               \ }
         call s:pull(repo)
 
@@ -448,8 +449,7 @@ function! s:msg_on_build_start(name) abort
 endfunction
 
 function! s:get_build_argv(build) abort
-  " TODO check os
-  return a:build
+  return a:build[s:SYS.name]
 endfunction
 " + foo.vim: Updating...
 if has('nvim')
@@ -550,10 +550,12 @@ function! s:open_plugin_dir() abort
     enew
     exe 'resize ' . &lines * 30 / 100
     let shell = empty($SHELL) ? SpaceVim#api#import('system').isWindows ? 'cmd.exe' : 'bash' : $SHELL
-    if has('nvim')
+    if has('nvim') && exists('*termopen')
       call termopen(shell, {'cwd' : dein#get(keys(plugin)[0]).path})
-    else
+    elseif exists('*term_start')
       call term_start(shell, {'curwin' : 1, 'term_finish' : 'close', 'cwd' : dein#get(keys(plugin)[0]).path})
+    else
+      exe 'VimShell ' .  dein#get(keys(plugin)[0]).path
     endif
   endif
 endfunction
@@ -643,7 +645,7 @@ else
 endi
 
 " Public API: SpaceVim#plugins#manager#terminal {{{
-function! SpaceVim#plugins#manager#terminal()
+function! SpaceVim#plugins#manager#terminal() abort
   for id in keys(s:pulling_repos)
     call s:JOB.stop(str2nr(id))
   endfor

@@ -13,7 +13,6 @@ function! SpaceVim#layers#ui#plugins() abort
         \ ['majutsushi/tagbar', {'loadconf' : 1}],
         \ ['tenfyzhong/tagbar-makefile.vim', {'merged': 0}],
         \ ['tenfyzhong/tagbar-proto.vim', {'merged': 0}],
-        \ ['lvht/tagbar-markdown',{'merged' : 0}],
         \ ['t9md/vim-choosewin', {'merged' : 0}],
         \ ['mhinz/vim-startify', {'loadconf' : 1, 'merged' : 0}],
         \ ]
@@ -49,14 +48,14 @@ function! SpaceVim#layers#ui#config() abort
   " Ui toggles
   call SpaceVim#mapping#space#def('nnoremap', ['t', '8'], 'call call('
         \ . string(s:_function('s:toggle_fill_column')) . ', [])',
-        \ 'toggle-colorcolumn', 1)
+        \ 'highlight-long-lines', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['t', 'b'], 'call ToggleBG()',
         \ 'toggle background', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['t', 't'], 'call SpaceVim#plugins#tabmanager#open()',
         \ 'Open tabs manager', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['t', 'f'], 'call call('
         \ . string(s:_function('s:toggle_colorcolumn')) . ', [])',
-        \ 'toggle-colorcolumn', 1)
+        \ 'fill-column-indicator', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['t', 'h', 'h'], 'set cursorline!',
         \ 'toggle highlight of the current line', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['t', 'h', 'i'], 'call call('
@@ -136,7 +135,7 @@ else
 endif
 function! s:toggle_colorcolumn() abort
   if !s:ccflag
-    set cc=80
+    let &cc = g:spacevim_max_column
     let s:ccflag = 1
   else
     set cc=

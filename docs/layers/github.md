@@ -3,12 +3,12 @@ title: "SpaceVim github layer"
 description: "This layer provides GitHub integration for SpaceVim"
 ---
 
-# [SpaceVim Layers:](https://spacevim.org/layers) github
+# [Available Layers](../) >> github
 
 <!-- vim-markdown-toc GFM -->
 
 - [Description](#description)
-- [Layer Installation](#layer-installation)
+- [Install](#install)
 - [Key bindings](#key-bindings)
 
 <!-- vim-markdown-toc -->
@@ -17,22 +17,24 @@ description: "This layer provides GitHub integration for SpaceVim"
 
 This layer provides GitHub integration for SpaceVim.
 
-## Layer Installation
+## Install
 
-To use this configuration layer, add it to your `~/.SpaceVim.d/init.vim`.
+To use this configuration layer, add following snippet to your custom configuration file.
 
-```vim
-call SpaceVim#layers#load('github')
+```toml
+[[layers]]
+  name = "github"
 ```
 
 ## Key bindings
 
-| Key Binding | Description                          |
-| ----------- | ------------------------------------ |
-| `SPC g h i` | show issues                          |
-| `SPC g h a` | show activities                      |
-| `SPC g h d` | show dashboard                       |
-| `SPC g h f` | show current file in browser         |
-| `SPC g h I` | show issues in browser               |
-| `SPC g h p` | show PRs in browser                  |
-
+| Key Binding | Description                  |
+| ----------- | ---------------------------- |
+| `SPC g h i` | show issues                  |
+| `SPC g h a` | show activities              |
+| `SPC g h d` | show dashboard               |
+| `SPC g h f` | show current file in browser |
+| `SPC g h I` | show issues in browser       |
+| `SPC g h p` | show PRs in browser          |
+| `SPC g g l` | list all gist                |
+| `SPC g g p` | post gist                    |

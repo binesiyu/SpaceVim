@@ -1,9 +1,10 @@
 ---
 title: SpaceVim release v0.1.0
-categories: changelog
-description: "First public release of SpaceVim with IDE-like UI, most language support, modular configuration"
+categories: [changelog, blog]
+excerpt: "First public release of SpaceVim with IDE-like UI, most language support, modular configuration"
 type: NewsArticle
 comments: true
+commentsID: "SpaceVim release v0.1.0"
 ---
 
 # [Changelogs](development#changelog) > SpaceVim release v0.1.0

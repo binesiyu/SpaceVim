@@ -10,27 +10,49 @@
 " @section Introduction, intro
 " @stylized spacevim
 " @library
-" @order intro version dicts functions exceptions layers api faq
+" @order intro options config layers api faq changelog
 " SpaceVim is a bundle of custom settings and plugins with a modular
 " configuration for Vim. It was inspired by Spacemacs.
 "
 
 ""
-" @section CONFIGURATION, config
-" SpaceVim uses `~/.SpaceVim.d/init.vim` as its default global config file.
+" @section Options, options
+" SpaceVim uses `~/.SpaceVim.d/init.toml` as its default global config file.
 " You can set all the SpaceVim options and layers in it. `~/.SpaceVim.d/` will
 " also be added to runtimepath, so you can write your own scripts in it.
 " SpaceVim also supports local config for each project. Place local config 
-" settings in `.SpaceVim.d/init.vim` in the root directory of your project.
+" settings in `.SpaceVim.d/init.toml` in the root directory of your project.
 " `.SpaceVim.d/` will also be added to runtimepath.
+" 
+" here is an example setting SpaceVim options:
+" >
+"   [options]
+"     enable-guicolors = true
+"     max-column = 120
+" <
+
+
+""
+" @section Configuration, config
+" If you still want to use `~/.SpaceVim.d/init.vim` as configuration file,
+" please check bellowing options.
+"
 
 " Public SpaceVim Options {{{
 scriptencoding utf-8
 
 ""
 " Version of SpaceVim , this value can not be changed.
-let g:spacevim_version = '0.8.0-dev'
+let g:spacevim_version = '0.9.0-dev'
 lockvar g:spacevim_version
+
+""
+" @section default_indent, options-default_indent
+" @parentsection options
+" Change the default indentation of SpaceVim. Default is 2.
+" >
+"   default_indent = 2
+" <
 
 ""
 " Change the default indentation of SpaceVim. Default is 2.
@@ -39,26 +61,76 @@ lockvar g:spacevim_version
 " <
 let g:spacevim_default_indent          = 2
 ""
+" In Insert mode: Use the appropriate number of spaces to insert a <Tab>
+let g:spacevim_expand_tab              = 1
+
+""
+" @section relativenumber, options-relativenumber
+" @parentsection options
+" Enable/Disable relativenumber, by default it is enabled.
+" >
+"   relativenumber = true
+" <
+
+""
 " Enable/Disable relativenumber, by default it is enabled.
 let g:spacevim_relativenumber          = 1
+
+""
+" @section max_column, options-max_column
+" @parentsection options
+" Change the max number of columns for SpaceVim. Default is 120.
+" >
+"   max_column = 120
+" <
+
 ""
 " Change the max number of columns for SpaceVim. Default is 120.
 " >
 "   let g:spacevim_max_column = 120
 " <
 let g:spacevim_max_column              = 120
+
+""
+" @section enable_guicolors, options-enable_guicolors
+" @parentsection options
+" Enable true color support in terminal. Default is true.
+" >
+"   enable_guicolors = true
+" <
+
 ""
 " Enable true color support in terminal. Default is 1.
 " >
 "   let g:spacevim_enable_guicolors = 1
 " <
 let g:spacevim_enable_guicolors = 1
+
+""
+" @section enable_googlesuggest, options-enable_googlesuggest
+" @parentsection options
+" Enable/Disable Google suggestions for neocomplete. Default is false.
+" >
+"   enable_googlesuggest = false
+" <
+
 ""
 " Enable/Disable Google suggestions for neocomplete. Default is 0.
 " >
 "   let g:spacevim_enable_googlesuggest = 1
 " <
 let g:spacevim_enable_googlesuggest    = 0
+
+""
+" @section windows_leader, options-windows_leader
+" @parentsection options
+" Window functions leader for SpaceVim. Default is `s`. 
+" Set to empty to disable this feature, or you can set to another char.
+" >
+"   windows_leader = ""
+" <
+
+
 ""
 " Window functions leader for SpaceVim. Default is `s`. 
 " Set to empty to disable this feature, or you can set to another char.
@@ -66,20 +138,24 @@ let g:spacevim_enable_googlesuggest    = 0
 "   let g:spacevim_windows_leader = ''
 " <
 let g:spacevim_windows_leader          = 's'
+
 ""
-" Unite work flow leader of SpaceVim. Default is `f`.
-" Set to empty to disable this feature, or you can set to another char.
-let g:spacevim_unite_leader            = '\f'
-""
-" Denite work flow leader of SpaceVim. Default is `F`.
-" Set to empty to disable this feature, or you can set to another char.
-let g:spacevim_denite_leader            = 'F'
+" @section enable_insert_leader, options-enable_insert_leader
+" @parentsection options
+" Enable/Disable spacevim's insert mode leader, default is enable
+
 ""
 " Enable/Disable spacevim's insert mode leader, default is enable
 let g:spacevim_enable_insert_leader    = 1
-let g:spacevim_neobundle_installed     = 0
-let g:spacevim_dein_installed          = 0
-let g:spacevim_vim_plug_installed      = 0
+
+""
+" @section plugin_bundle_dir, options-plugin_bundle_dir
+" @parentsection options
+" Set the cache directory of plugins. Default is `~/.cache/vimfiles`.
+" >
+"   plugin_bundle_dir = "~/.cache/vimplugs"
+" <
+
 ""
 " Set the cache directory of plugins. Default is `~/.cache/vimfiles`.
 " >
@@ -88,6 +164,15 @@ let g:spacevim_vim_plug_installed      = 0
 let g:spacevim_plugin_bundle_dir
       \ = $HOME. join(['', '.cache', 'vimfiles', ''],
       \ SpaceVim#api#import('file').separator)
+
+""
+" @section realtime_leader_guide, options-realtime_leader_guide
+" @parentsection options
+" Enable/Disable realtime leader guide. Default is true. to disable it:
+" >
+"   realtime_leader_guide = false
+" <
+
 ""
 " Enable/Disable realtime leader guide. Default is 1. to disable it:
 " >
@@ -101,7 +186,8 @@ let g:spacevim_realtime_leader_guide   = 1
 "   let g:spacevim_enable_key_frequency = 1
 " <
 let g:spacevim_enable_key_frequency = 0
-if has('python3') && SpaceVim#util#haspy3lib('neovim')
+if (has('python3') && SpaceVim#util#haspy3lib('neovim')) &&
+      \ (has('nvim') || (has('patch-8.0.0027')))
   ""
   " Set the autocomplete engine of spacevim, the default logic is:
   " >
@@ -120,46 +206,99 @@ if has('python3') && SpaceVim#util#haspy3lib('neovim')
   let g:spacevim_autocomplete_method = 'deoplete'
 elseif has('lua')
   let g:spacevim_autocomplete_method = 'neocomplete'
-elseif has('python')
+elseif has('python') && ((has('job') && has('timers') && has('lambda')) || has('nvim'))
   let g:spacevim_autocomplete_method = 'completor'
 elseif has('timers')
   let g:spacevim_autocomplete_method = 'asyncomplete'
 else
   let g:spacevim_autocomplete_method = 'neocomplcache'
 endif
+
+""
+" @section enable_neomake, options-enable_neomake
+" @parentsection options
+" SpaceVim default checker is neomake. If you want to use syntastic, use:
+" >
+"   enable_neomake = false
+" <
+
 ""
 " SpaceVim default checker is neomake. If you want to use syntastic, use:
 " >
 "   let g:spacevim_enable_neomake = 0
 " <
 let g:spacevim_enable_neomake          = 1
+
+""
+" @section enable_ale, options-enable_ale
+" @parentsection options
+" Use ale for syntax checking, disabled by default.
+" >
+"   enable_ale = true
+" <
+
 ""
 " Use ale for syntax checking, disabled by default.
 " >
 "   let g:spacevim_enable_ale = 1
 " <
 let g:spacevim_enable_ale          = 0
+
+""
+" @section guifont, options-guifont
+" @parentsection options
+" Set the guifont of SpaceVim. Default is empty.
+" >
+"   guifont = "DejaVu\ Sans\ Mono\ for\ Powerline\ 11"
+" <
+
 ""
 " Set the guifont of SpaceVim. Default is empty.
 " >
 "   let g:spacevim_guifont = 'DejaVu\ Sans\ Mono\ for\ Powerline\ 11'
 " <
 let g:spacevim_guifont                 = ''
+
+""
+" @section enable_ycm, options-enable_ycm
+" @parentsection options
+" Enable/Disable YouCompleteMe. Default is false.
+" >
+"   enable_ycm = true
+" <
+
 ""
 " Enable/Disable YouCompleteMe. Default is 0.
 " >
 "   let g:spacevim_enable_ycm = 1
 " <
 let g:spacevim_enable_ycm              = 0
+
+""
+" @section sidebar_width, options-sidebar_width
+" @parentsection options
+" Set the width of the SpaceVim sidebar. Default is 30.
+" This value will be used by tagbar and vimfiler.
+
 ""
 " Set the width of the SpaceVim sidebar. Default is 30.
 " This value will be used by tagbar and vimfiler.
 let g:spacevim_sidebar_width           = 30
+
+""
+" @section snippet_engine, options-snippet_engine
+" @parentsection options
+" Set the snippet engine of SpaceVim, default is neosnippet. to enable
+" ultisnips:
+" >
+"   snippet_engine = "ultisnips"
+" <
+
 ""
 " Set the snippet engine of SpaceVim, default is neosnippet. to enable
 " ultisnips:
 " >
-"   let g:spacevim_snippet_engine = 'ultisnips'
+"   let g:spacevim_snippet_engine = "ultisnips"
 " <
 let g:spacevim_snippet_engine = 'neosnippet'
 let g:spacevim_enable_neocomplcache    = 0
@@ -173,7 +312,7 @@ let g:spacevim_enable_cursorline       = 1
 ""
 " Set the statusline separators of statusline, default is 'arrow'
 " >
-"   Separatos options:
+"   Separators options:
 "     1. arrow
 "     2. curve
 "     3. slant
@@ -220,13 +359,23 @@ let g:spacevim_statusline_unicode_symbols = 1
 " Enable/Disable language specific leader, by default you can use `,` ket
 " instead of `SPC` `l`.
 let g:spacevim_enable_language_specific_leader = 1
+
+""
+" @section enable_statusline_mode, options-enable_statusline_mode
+" @parentsection options
+" Enable/Disable display mode. Default is 0, mode will be
+" displayed in statusline. To enable this feature:
+" >
+"   enable_statusline_mode = true
+" <
+
 ""
 " Enable/Disable display mode. Default is 0, mode will be
 " displayed in statusline. To enable this feature:
 " >
-"   let g:spacevim_enable_statusline_display_mode = 1
+"   let g:spacevim_enable_statusline_mode = 1
 " <
-let g:spacevim_enable_statusline_display_mode     = 0
+let g:spacevim_enable_statusline_mode     = 0
 ""
 " Set the statusline/tabline palette of color, default values depends on the theme
 " >
@@ -238,6 +387,8 @@ let g:spacevim_enable_statusline_display_mode     = 0
 "     \ ['#282828', '#83a598', 235, 109],
 "     \ ['#282828', '#fe8019', 235, 208],
 "     \ ['#282828', '#8ec07c', 235, 108],
+"     \ ['#282828', '#689d6a', 235, 72],
+"     \ ['#282828', '#8f3f71', 235, 132],
 "     \ ]
 " <
 "
@@ -249,6 +400,15 @@ let g:spacevim_custom_color_palette = []
 "   let g:spacevim_enable_cursorcolumn = 1
 " <
 let g:spacevim_enable_cursorcolumn     = 0
+
+""
+" @section error_symbol, options-error_symbol
+" @parentsection options
+" Set the error symbol for SpaceVim's syntax maker. Default is '✖'.
+" >
+"   error_symbol = "+"
+" <
+
 ""
 " Set the error symbol for SpaceVim's syntax maker. Default is '✖'.
 " >
@@ -325,15 +485,41 @@ let g:spacevim_filemanager             = 'vimfiler'
 " The default plugin manager of SpaceVim. Default is 'dein'.
 " Options are dein, neobundle, or vim-plug.
 let g:spacevim_plugin_manager          = 'dein'
+
+""
+" @section plugin_manager_processes, options-plugin_manager_processes
+" @parentsection options
+" Set the max process of SpaceVim plugin manager
+
 ""
 " Set the max process of SpaceVim plugin manager
-let g:spacevim_plugin_manager_max_processes = 16
+let g:spacevim_plugin_manager_processes = 16
+
+""
+" @section checkinstall, options-checkinstall
+" @parentsection options
+" Enable/Disable checkinstall on SpaceVim startup. Default is true.
+" >
+"   checkinstall = true
+" <
+
 ""
 " Enable/Disable checkinstall on SpaceVim startup. Default is 1.
 " >
 "   let g:spacevim_checkinstall = 1
 " <
 let g:spacevim_checkinstall            = 1
+""
+" Enable/Disable vimcompatible mode, by default it is disabled. In
+" vimcompatible mode all vim origin key bindings will not be changed.
+"
+" Includes:
+" >
+"   q       smart quit windows
+"   s       windows key bindings leader
+"   <C-x>   switch buffer
+" <
+let g:spacevim_vimcompatible           = 0
 ""
 " Enable/Disable debug mode for SpaceVim. Default is 0.
 " >
@@ -431,6 +617,15 @@ let g:spacevim_project_rooter_patterns = ['.git/', '_darcs/', '.hg/', '.bzr/', '
 ""
 " Enable/Disable changing directory automatically. Enabled by default.
 let g:spacevim_project_rooter_automatically = 1
+
+""
+" @section lint_on_the_fly, options-lint_on_the_fly
+" @parentsection options
+" Enable/Disable lint on the fly feature of SpaceVim's maker. Default is true.
+" >
+"   lint_on_the_fly = false
+" <
+
 ""
 " Enable/Disable lint on the fly feature of SpaceVim's maker. Default is 0.
 " >
@@ -451,9 +646,11 @@ let g:spacevim_enable_vimfiler_gitstatus = 0
 ""
 " Enable/Disable filetypeicon column in vimfiler buffer, default is 0.
 let g:spacevim_enable_vimfiler_filetypeicon = 0
+""
+" Enable/Disable autocompletion of parentheses, default is 1 (enabled).
+let g:spacevim_autocomplete_parens = 1
 let g:spacevim_smartcloseignorewin     = ['__Tagbar__' , 'vimfiler:default']
 let g:spacevim_smartcloseignoreft      = [
-      \ 'help',
       \ 'tagbar',
       \ 'vimfiler',
       \ 'SpaceVimRunner',
@@ -462,6 +659,7 @@ let g:spacevim_smartcloseignoreft      = [
       \ 'HelpDescribe',
       \ 'VebuggerShell',
       \ 'VebuggerTerminal',
+      \ 'SpaceVimTabsManager'
       \ ]
 let g:spacevim_altmoveignoreft         = ['Tagbar' , 'vimfiler']
 let g:spacevim_enable_javacomplete2_py = 0
@@ -483,6 +681,9 @@ let g:spacevim_wildignore
 let g:_spacevim_mappings = {}
 let g:_spacevim_mappings_space_custom = []
 let g:_spacevim_mappings_space_custom_group_name = []
+let g:_spacevim_neobundle_installed     = 0
+let g:_spacevim_dein_installed          = 0
+let g:_spacevim_vim_plug_installed      = 0
 
 if !exists('g:leaderGuide_vertical')
   let g:leaderGuide_vertical = 0
@@ -549,52 +750,15 @@ endif
 command -nargs=1 LeaderGuide call SpaceVim#mapping#guide#start_by_prefix('0', <args>)
 command -range -nargs=1 LeaderGuideVisual call SpaceVim#mapping#guide#start_by_prefix('1', <args>)
 
-function! SpaceVim#loadCustomConfig() abort
-  let custom_conf = SpaceVim#util#globpath(getcwd(), '.SpaceVim.d/init.vim')
-  let custom_glob_conf = expand('~/.SpaceVim.d/init.vim')
-
-  if has('timers')
-    if !filereadable(custom_glob_conf)
-      " if there is no custom config auto generate it.
-      let g:spacevim_checkinstall = 0
-      augroup SpaceVimBootstrap
-        au!
-        au VimEnter * call timer_start(2000, function('SpaceVim#custom#autoconfig'))
-      augroup END
-    endif
-  endif
-
-  if !empty(custom_conf)
-    if isdirectory('.SpaceVim.d')
-      exe 'set rtp ^=' . fnamemodify('.SpaceVim.d', ':p')
-    endif
-    exe 'source ' . custom_conf[0]
-    if g:spacevim_force_global_config
-      if filereadable(custom_glob_conf)
-        if isdirectory(expand('~/.SpaceVim.d/'))
-          set runtimepath^=~/.SpaceVim.d
-        endif
-        exe 'source ' . custom_glob_conf
-      endif
-    else
-      call SpaceVim#logger#info('Skip glob configration of SpaceVim')
-    endif
-  elseif filereadable(custom_glob_conf)
-    if isdirectory(expand('~/.SpaceVim.d/'))
-      set runtimepath^=~/.SpaceVim.d
-    endif
-    exe 'source ' . custom_glob_conf
-  endif
-
-  if g:spacevim_enable_ycm && g:spacevim_snippet_engine !=# 'ultisnips'
-    call SpaceVim#logger#info('YCM only support ultisnips, change g:spacevim_snippet_engine to ultisnips')
-    let g:spacevim_snippet_engine = 'ultisnips'
-  endif
-endfunction
-
-
 function! SpaceVim#end() abort
-
+  if g:spacevim_vimcompatible != 1
+    call SpaceVim#mapping#def('nnoremap <silent>', '<Tab>', ':wincmd w<CR>', 'Switch to next window or tab','wincmd w')
+    call SpaceVim#mapping#def('nnoremap <silent>', '<S-Tab>', ':wincmd p<CR>', 'Switch to previous window or tab','wincmd p')
+  endif
+  if g:spacevim_vimcompatible == 1
+    let g:spacevim_windows_leader = ''
+    let g:spacevim_windows_smartclose = 0
+  endif
   call SpaceVim#server#connect()
 
   if g:spacevim_enable_neocomplcache
@@ -651,7 +815,13 @@ function! SpaceVim#end() abort
     set relativenumber
   endif
 
+  " tab options:
+  set smarttab
+  let &expandtab = g:spacevim_expand_tab
+  let &tabstop = g:spacevim_default_indent
+  let &softtabstop = g:spacevim_default_indent
   let &shiftwidth = g:spacevim_default_indent
+
 
   if g:spacevim_realtime_leader_guide
     nnoremap <silent><nowait> <leader> :<c-u>LeaderGuide get(g:, 'mapleader', '\')<CR>
@@ -688,7 +858,7 @@ function! SpaceVim#begin() abort
     if !argc()
       return [1, getcwd()]
     elseif argv(0) =~# '/$'
-      let f = expand(argv(0))
+      let f = fnamemodify(expand(argv(0)), ':p')
       if isdirectory(f)
         return [1, f]
       else
@@ -792,6 +962,14 @@ endfunction
 "   Add `let mapleader = "\<space>"` to `~/.SpaceVim.d/init.vim`
 " <
 
-
+""
+" @section Changelog, changelog
+" Following HEAD: changes in master branch since last release v0.7.0
+" 
+" https://github.com/SpaceVim/SpaceVim/wiki/Following-HEAD
+"
+" 2018-03-19: v0.7.0
+"
+" https://spacevim.org/SpaceVim-release-v0.7.0/
 
 " vim:set et sw=2 cc=80:

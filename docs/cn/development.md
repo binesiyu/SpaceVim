@@ -14,6 +14,7 @@ lang: cn
   - [证书](#证书)
   - [公约](#公约)
   - [拉取请求](#拉取请求)
+    - [PR 标题前缀](#pr-标题前缀)
     - [在上游的主分支顶部压缩你的PR分支](#在上游的主分支顶部压缩你的pr分支)
     - [抽象化的简单 PRs(绝大多数PRs都是这样的):](#抽象化的简单-prs绝大多数prs都是这样的)
     - [复杂的PRs (大的重构, 等):](#复杂的prs-大的重构-等)
@@ -79,6 +80,21 @@ SpaceVim 所有部分采用 MIT 许可。
 SpaceVim 建立在下面的公约上: 该公约主要包括了 函数的命名, 按键绑定的定义以及文档的写法. 请阅读下面的公约: [conventions](https://spacevim.org/conventions/) 在您进行贡献前,请确认您已经了解了以上公约的内容.
 
 ### 拉取请求
+
+#### PR 标题前缀
+
+新开 pull request 时，应当标记该 PR 属于以下哪种前缀：
+
+- `Add:` 添加一新的特性
+- `Change:` 修改已有特性的行为
+- `Fixed:` 修复某些问题
+- `Remove:` 移除原先支持的某种特性
+- `Doc:` 更新帮助文档
+- `Website:` 更新网站内容
+
+示例如下：
+
+`Website: update the lang#c layer page`
 
 #### 在上游的主分支顶部压缩你的PR分支
 
@@ -288,7 +304,7 @@ You are free to choose a reasonable height size but the width size should be aro
 
 ## Build with SpaceVim
 
-SpaceVim provide a lot of public [APIs](https://spacevim.org/apis), you can create plugins base on this APIs. also you can add a badge to the README.md of your plugin.
+SpaceVim provide a lot of public [APIs](../api/), you can create plugins base on this APIs. also you can add a badge to the README.md of your plugin.
 
 ![](https://img.shields.io/badge/build%20with-SpaceVim-ff69b4.svg)
 
@@ -301,9 +317,11 @@ markdown
 ## Changelog
 
 <ul>
-    {% for post in site.categories.changelog %}
+    {% for post in site.categories.changelog_cn %}
             <li>
-                <a href="{{ post.url }}">{{ post.title }}</a>
+               <h3><a href="{{ post.url }}">{{ post.title }}</a></h3>
+               <span class="post-date">{{ post.date | date_to_string }}</span>
+               <p>{{ post.excerpt | truncatewords: 100 }}</p>
             </li>
     {% endfor %}
 </ul>

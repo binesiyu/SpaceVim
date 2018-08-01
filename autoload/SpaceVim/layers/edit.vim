@@ -17,22 +17,19 @@ function! SpaceVim#layers#edit#plugins() abort
         \ ['tpope/vim-surround'],
         \ ['tpope/vim-repeat'],
         \ ['junegunn/vim-emoji'],
-        \ ['terryma/vim-multiple-cursors', { 'loadconf' : 1}],
+        \ ['terryma/vim-multiple-cursors', { 'loadconf' : 1, 'merged' : 0}],
         \ ['terryma/vim-expand-region', { 'loadconf' : 1}],
         \ ['kana/vim-textobj-user'],
         \ ['kana/vim-textobj-indent'],
         \ ['kana/vim-textobj-line'],
         \ ['kana/vim-textobj-entire'],
-        \ ['scrooloose/nerdcommenter', { 'loadconf' : 1}],
         \ ['gcmt/wildfire.vim',{'on_map' : '<Plug>(wildfire-'}],
         \ ['easymotion/vim-easymotion'],
         \ ['haya14busa/vim-easyoperator-line'],
         \ ['editorconfig/editorconfig-vim', { 'merged' : 0}],
-        \ ['floobits/floobits-neovim',      { 'on_cmd' : ['FlooJoinWorkspace','FlooShareDirPublic','FlooShareDirPrivate']}],
         \ ['osyo-manga/vim-jplus', { 'on_map' : '<Plug>(jplus' }],
         \ ['godlygeek/tabular',           { 'on_cmd' : 'Tabularize'}],
         \ ['ntpeters/vim-better-whitespace',  { 'on_cmd' : 'StripWhitespace'}],
-        \ ['ianva/vim-youdao-translater', { 'on_cmd' : ['Ydv','Ydc','Yde']}],
         \ ]
   if executable('fcitx')
     call add(plugins,['lilydjwg/fcitx.vim',        { 'on_event' : 'InsertEnter'}])
@@ -85,6 +82,7 @@ function! SpaceVim#layers#edit#config() abort
   call SpaceVim#mapping#space#def('nnoremap', ['x', 'a', ';'], 'Tabularize /;', 'align region at ;', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['x', 'a', '='], 'Tabularize /=', 'align region at =', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['x', 'a', '¦'], 'Tabularize /¦', 'align region at ¦', 1)
+  call SpaceVim#mapping#space#def('nnoremap', ['x', 'a', '<Bar>'], 'Tabularize /|', 'align region at |', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['x', 'd', 'w'], 'StripWhitespace', 'delete trailing whitespaces', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['x', 'd', '[SPC]'], 'silent call call('
         \ . string(s:_function('s:delete_extra_space')) . ', [])',
@@ -144,9 +142,6 @@ function! SpaceVim#layers#edit#config() abort
   call SpaceVim#mapping#space#def('nnoremap', ['i', 'l', 's'], 'call call('
         \ . string(s:_function('s:insert_lorem_ipsum_sentence')) . ', [])',
         \ 'insert lorem-ipsum sentence', 1)
-  let g:_spacevim_mappings_space.x.g = {'name' : '+translate'}
-  call SpaceVim#mapping#space#def('nnoremap', ['x', 'g', 't'], 'Ydc', 'translate current word', 1)
-
   " move line
   call SpaceVim#mapping#space#def('nnoremap', ['x', 'J'], 'call call('
         \ . string(s:_function('s:move_text_down_transient_state')) . ', [])',

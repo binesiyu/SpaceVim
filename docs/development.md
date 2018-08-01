@@ -14,9 +14,10 @@ description: "General contributing guidelines and changelog of SpaceVim, includi
   - [Bootstrap](#bootstrap)
   - [Conventions](#conventions)
   - [Pull Request](#pull-request)
-    - [Rebase your pr Branch on top of upstream master:](#rebase-your-pr-branch-on-top-of-upstream-master)
-    - [Ideally for simple PRs (most of them):](#ideally-for-simple-prs-most-of-them)
-    - [For complex PRs (big refactoring, etc):](#for-complex-prs-big-refactoring-etc)
+    - [Title prefix of pull request](#title-prefix-of-pull-request)
+    - [Rebase on top of upstream master](#rebase-on-top-of-upstream-master)
+    - [Ideally for simple PRs](#ideally-for-simple-prs)
+    - [For complex PRs](#for-complex-prs)
   - [Contributing a layer](#contributing-a-layer)
     - [File header](#file-header)
     - [Author of a new layer](#author-of-a-new-layer)
@@ -47,7 +48,7 @@ You can only consider reading the sections relevant to what you are going to do:
 If you want to ask an usage question, be sure to look first into some places as it may hold the answers:
 
 - <kbd>:h SpaceVim-faq</kbd>: Some of the most frequently asked questions are answered there.
-- [SpaceVim documentation](https://spacevim.org/documentation): It is the general documentation of SpaceVim.
+- [SpaceVim documentation](https://spacevim.org/documentation/): It is the general documentation of SpaceVim.
 
 ## Reporting issues
 
@@ -84,7 +85,22 @@ SpaceVim is based on conventions, mainly for naming functions, keybindings defin
 
 ### Pull Request
 
-#### Rebase your pr Branch on top of upstream master:
+#### Title prefix of pull request
+
+pull request title should contains one of these prefix:
+
+- `Add:` Adding a new feature.
+- `Change:` Change default behaviors or the existing features.
+- `Fixed:` Fix some bugs
+- `Remove:` Remove any existing features.
+- `Doc:` update the help file.
+- `Website:` Update the contend of website.
+
+here is an example:
+
+`Website: update the lang#c layer page`
+
+#### Rebase on top of upstream master
 
 - fork SpaceVim repository
 - clone your repository
@@ -103,10 +119,10 @@ git remote add upstream https://github.com/SpaceVim/SpaceVim.git
 
 ```sh
 git fetch upstream
-git rebase upstream master
+git rebase upstream/master master
 ```
 
-#### Ideally for simple PRs (most of them):
+#### Ideally for simple PRs
 
 - Branch from `master`
 - One topic per PR
@@ -114,7 +130,7 @@ git rebase upstream master
 - If you have several commits on different topics, close the PR and create one PR per topic
 - If you still have several commits, squash them into only one commit
 
-#### For complex PRs (big refactoring, etc):
+#### For complex PRs
 
 Squash only the commits with uninteresting changes like typos, syntax fixes, etc… and keep the important and isolated steps in different commits.
 
@@ -258,7 +274,8 @@ First if you want to have some personal mappings, This can be done in your `~/.S
 
 If you think it worth contributing a new mappings then be sure to read the documentation to find the best mappings, then create a Pull-Request with your changes.
 
-ALWAYS document your new mappings or mappings changes inside the relevant documentation file. It should be the the layer file and the [documentation.md](https://spacevim.org/documentation).
+ALWAYS document your new mappings or mappings changes inside the relevant documentation file.
+It should be the the layer file and the [documentation](../documentation/).
 
 ##### Language specified key bindings
 
@@ -268,15 +285,15 @@ we recommended to keep same language specified key bindings for different langua
 
 | Key Binding | Description                                      |
 | ----------- | ------------------------------------------------ |
-| SPC l r     | start a runner for current file                  |
-| SPC l e     | rename symbol                                    |
-| SPC l d     | show doc                                         |
-| SPC l i r   | remove unused imports                            |
-| SPC l i s   | sort imports with isort                          |
-| SPC l s i   | Start a language specified inferior REPL process |
-| SPC l s b   | send buffer and keep code buffer focused         |
-| SPC l s l   | send line and keep code buffer focused           |
-| SPC l s s   | send selection text and keep code buffer focused |
+| `SPC l r`   | start a runner for current file                  |
+| `SPC l e`   | rename symbol                                    |
+| `SPC l d`   | show doc                                         |
+| `SPC l i r` | remove unused imports                            |
+| `SPC l i s` | sort imports with isort                          |
+| `SPC l s i` | Start a language specified inferior REPL process |
+| `SPC l s b` | send buffer and keep code buffer focused         |
+| `SPC l s l` | send line and keep code buffer focused           |
+| `SPC l s s` | send selection text and keep code buffer focused |
 
 All of these above key bindings are just recommended as default, but it also base on the language layer itself.
 
@@ -290,7 +307,7 @@ You are free to choose a reasonable height size but the width size should be aro
 
 ## Build with SpaceVim
 
-SpaceVim provide a lot of public [APIs](https://spacevim.org/apis), you can create plugins base on this APIs. also you can add a badge to the README.md of your plugin.
+SpaceVim provide a lot of public [APIs](../api/), you can create plugins base on this APIs. also you can add a badge to the README.md of your plugin.
 
 ![](https://img.shields.io/badge/build%20with-SpaceVim-ff69b4.svg)
 
@@ -305,7 +322,9 @@ markdown
 <ul>
     {% for post in site.categories.changelog %}
             <li>
-                <a href="{{ post.url }}">{{ post.title }}</a>
+               <h3><a href="{{ post.url }}">{{ post.title }}</a></h3>
+               <span class="post-date">{{ post.date | date_to_string }}</span>
+               <p>{{ post.excerpt | truncatewords: 100 }}</p>
             </li>
     {% endfor %}
 </ul>

@@ -1,8 +1,9 @@
 ---
 title: SpaceVim release v0.3.1
-categories: changelog
+categories: [changelog, blog]
 excerpt: "Here you can check what has been done so far."
 type: NewsArticle
+commentsID: "SpaceVim release v0.3.1"
 comments: true
 ---
 

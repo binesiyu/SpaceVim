@@ -1,14 +1,14 @@
 ---
-title: "SpaceVim lang#javascript layer"
-description: "This layer is for haskell development"
+title: "SpaceVim lang#haskell layer"
+description: "haskell language support for SpaceVim, includes code completion, syntax checking, jumping to definition, also provides language server protocol support for haskell"
 ---
 
-# [SpaceVim Layers:](https://spacevim.org/layers) lang#haskell
+# [Available Layers](../../) >> lang#haskell
 
 <!-- vim-markdown-toc GFM -->
 
 - [Description](#description)
-- [Layer Installation](#layer-installation)
+- [Install](#install)
 - [Features](#features)
 
 <!-- vim-markdown-toc -->
@@ -17,9 +17,14 @@ description: "This layer is for haskell development"
 
 This layer is for haskell development.
 
-## Layer Installation
+## Install
 
-To use this configuration layer, add `call SpaceVim#layers#load('lang#haskell')` to your custom configuration file.
+To use this configuration layer, update custom configuration file with:
+
+```toml
+[[layers]]
+  name = "lang#haskell"
+```
 
 ## Features
 

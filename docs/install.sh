@@ -84,7 +84,7 @@ On_IWhite='\033[0;107m'   # White
 # }}}
 
 # version
-Version='0.8.0-dev'
+Version='0.9.0-dev'
 #System name
 System="$(uname -s)"
 
@@ -124,7 +124,7 @@ warn () {
 
 # echo_with_color {{{
 echo_with_color () {
-  printf '%b\n' "$1$2" >&2
+  printf '%b\n' "$1$2$Color_off" >&2
 }
 # }}}
 
@@ -189,6 +189,7 @@ install_neovim () {
       success "Installed SpaceVim for neovim"
     fi
   else
+    mkdir -p "$HOME/.config"
     ln -s "$HOME/.SpaceVim" "$HOME/.config/nvim"
     success "Installed SpaceVim for neovim"
   fi
@@ -263,7 +264,7 @@ check_requirements () {
     fi
   fi
   info "Checking true colors support in terminal:"
-  sh -c "$(curl -fsSL https://raw.githubusercontent.com/JohnMorales/dotfiles/master/colors/24-bit-color.sh)"
+  bash -c "$(curl -fsSL https://raw.githubusercontent.com/JohnMorales/dotfiles/master/colors/24-bit-color.sh)"
 }
 # }}}
 
@@ -329,7 +330,7 @@ welcome () {
     echo_with_color ${Yellow} "               | ##                                                           "
     echo_with_color ${Yellow} "               | ##                                                           "
     echo_with_color ${Yellow} "               |__/                                                           "
-    echo_with_color ${Yellow} "                      version : 0.8.0-dev       by : spacevim.org             "
+    echo_with_color ${Yellow} "                      version : 0.9.0-dev       by : spacevim.org             "
 }
 
 # }}}

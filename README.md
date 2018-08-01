@@ -11,29 +11,29 @@
 [![Build Status](https://travis-ci.org/SpaceVim/SpaceVim.svg?branch=master)](https://travis-ci.org/SpaceVim/SpaceVim)
 [![Build status](https://ci.appveyor.com/api/projects/status/eh3t5oph70abp665/branch/master?svg=true)](https://ci.appveyor.com/project/wsdjeg/spacevim/branch/master)
 [![codecov](https://codecov.io/gh/SpaceVim/SpaceVim/branch/master/graph/badge.svg)](https://codecov.io/gh/SpaceVim/SpaceVim/branch/master)
-![Version](https://img.shields.io/badge/version-0.8.0--dev-FF69B4.svg)
+![Version](https://img.shields.io/badge/version-0.9.0--dev-FF69B4.svg)
 [![GPLv3 License](https://img.shields.io/badge/license-GPLv3-blue.svg)](LICENSE)
 [![Doc](https://img.shields.io/badge/doc-%3Ah%20SpaceVim-orange.svg)](doc/SpaceVim.txt)
 [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/SpaceVim/SpaceVim.svg)](http://isitmaintained.com/project/SpaceVim/SpaceVim "Average time to resolve an issue")
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/SpaceVim/SpaceVim.svg)](http://isitmaintained.com/project/SpaceVim/SpaceVim "Percentage of issues still open")
 
 SpaceVim is a community-driven modular vim distribution. It manages collections
-of plugins in layers, which help collect related packages together to provide IDE-like features. 
-SpaceVim is not only a vimrc but an ultimate Vim configuration, It contains many build-in features.
+of plugins in layers, which help collect related packages together to provide IDE-like features.
+SpaceVim is not just a vimrc but an ultimate Vim configuration, It contains many built-in features.
 
 ![welcome-page](https://user-images.githubusercontent.com/13142418/37595020-273b5bca-2bb2-11e8-8aba-638ed5f1c7ea.png)
 
-See the [quick start guide](https://spacevim.org/quick-start-guide), [documentation](https://spacevim.org/documentation) or the [available layers](http://spacevim.org/layers/) for more information.
+The last release is v0.8.0, check out [following-HEAD](https://github.com/SpaceVim/SpaceVim/wiki/Following-HEAD) page for what happened since last release.
+
+See the [quick start guide](https://spacevim.org/quick-start-guide/), [documentation](https://spacevim.org/documentation/) or the [available layers](http://spacevim.org/layers/) for more information.
 
 Here is a throughput graph of the repository for the last few weeks:
 
 [![Throughput Graph](https://graphs.waffle.io/SpaceVim/SpaceVim/throughput.svg)](https://waffle.io/SpaceVim/SpaceVim/metrics/throughput)
 
-
 <!-- vim-markdown-toc GFM -->
 
 - [New Features](#new-features)
-- [Install](#install)
 - [Project layout](#project-layout)
 - [Support SpaceVim](#support-spacevim)
 - [Credits & Thanks](#credits--thanks)
@@ -43,6 +43,55 @@ Here is a throughput graph of the repository for the last few weeks:
 ### New Features
 
 This is a list of latest features implemented in SpaceVim:
+
+**Use toml as default configuration**
+
+here is an example for using toml as SpaceVim config:
+
+```toml
+# This is basic configuration example for SpaceVim
+
+# All SpaceVim option below [option] section
+[options]
+    # set spacevim theme. by default colorscheme layer is not loaded,
+    # if you want to use more colorscheme, please load the colorscheme
+    # layer
+    colorscheme = "gruvbox"
+    background = "dark"
+    # Disable guicolors in basic mode, many terminal do not support 24bit
+    # true colors
+    enable_guicolors = false
+    # Disable statusline separator, if you want to use other value, please
+    # install nerd fonts
+    statusline_separator = "nil"
+    statusline_inactive_separator = "bar"
+    buffer_index_type = 4
+    windows_index_type = 3
+    enable_tabline_filetype_icon = false
+    enable_statusline_mode = false
+    statusline_unicode_symbols = false
+    # Enable vim compatible mode, avoid changing origin vim key bindings
+    vimcompatible = true
+
+# Enable autocomplete layer
+[[layers]]
+name = 'autocomplete'
+auto-completion-return-key-behavior = "complete"
+auto-completion-tab-key-behavior = "cycle"
+
+[[layers]]
+name = 'shell'
+default_position = 'top'
+default_height = 30
+```
+
+**Iedit mode**
+
+SpaceVim uses powerful iedit mode to quick edit multiple occurrences of a symbol or selection. Two new modes:`iedit-Normal`/`iedit-Insert`
+
+The default color for iedit is `red`/`green` which is based on the current colorscheme.
+
+![iedit mode](https://user-images.githubusercontent.com/13142418/37873892-c76afb14-2fea-11e8-9149-aa955b8265f1.gif)
 
 **Highlight cursor symbol**
 
@@ -80,28 +129,6 @@ create an UI for [dein.vim](https://github.com/Shougo/dein.vim/) - the best asyn
 
 For more features, please read [SpaceVim's Blog](https://spacevim.org/blog/)
 
-### Install
-
-At a minimum, SpaceVim requires `git` to be installed.  For a better graphical experience, install [nerd-font](https://github.com/ryanoasis/nerd-fonts) and make sure your terminal supports [true colors](https://gist.github.com/XVilka/8346728).
-
-**Linux and macOS**
-
-```bash
-curl -sLf https://spacevim.org/install.sh | bash
-```
-
-After SpaceVim is installed, launch `vim` and SpaceVim will **automatically** install plugins.
-
-For more info about the install script, please check:
-
-```bash
-curl -sLf https://spacevim.org/install.sh | bash -s -- -h
-```
-
-**Windows**
-
-The easist way is to download [install.cmd](https://spacevim.org/install.cmd) and run it as administrator, or install SpaceVim manually.
-
 ### Project layout
 
 ```txt
@@ -116,10 +143,9 @@ The easist way is to download [install.cmd](https://spacevim.org/install.cmd) an
 ├─ doc/                           help(cn/en)
 ├─ docs/                          website(cn/en)
 ├─ wiki/                          wiki(cn/en)
-├─ bin/                           executeable
+├─ bin/                           executable
 └─ test/                          tests
 ```
-
 
 ### Support SpaceVim
 
@@ -133,8 +159,8 @@ clicking following icon.
 
 <a href='https://ko-fi.com/spacevim' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://az743702.vo.msecnd.net/cdn/kofi4.png?v=f' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
 
-| wechat                                                                   | alipay                                                                     |
-| ------------------------------------------------------------------------ | -------------------------------------------------------------------------- |
+| wechat                                                                                                     | alipay                                                                                                       |
+| ---------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
 | <a href='#support-spacevim'><img src="https://spacevim.org/img/weixin.png" height="150" width="150" /></a> | <a href='#support-spacevim'><img src="https://spacevim.org/img/zhifubao.png" height="150" width="150" /></a> |
 
 Bitcoin: 1DtuVeg81c2L9NEhDaVTAAbrCR3pN5xPFv
@@ -143,6 +169,7 @@ Bitcoin: 1DtuVeg81c2L9NEhDaVTAAbrCR3pN5xPFv
 
 This project exists thanks to all the people who have [contributed](CONTRIBUTING.md):
 <a href="https://github.com/SpaceVim/SpaceVim/graphs/contributors"><img src="https://opencollective.com/spacevim/contributors.svg?width=890&button=false" /></a>
+
 - [@Gabirel](https://github.com/Gabirel) and his [Hack-SpaceVim](https://github.com/Gabirel/Hack-SpaceVim)
 - [@everettjf](https://github.com/everettjf) and his [SpaceVimTutorial](https://everettjf.gitbooks.io/spacevimtutorial/content/)
 - [vimdoc](https://github.com/google/vimdoc) generate doc file for SpaceVim

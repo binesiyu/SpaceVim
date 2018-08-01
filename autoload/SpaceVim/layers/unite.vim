@@ -45,7 +45,29 @@ function! SpaceVim#layers#unite#plugins() abort
   return plugins
 endfunction
 
+let s:filename = expand('<sfile>:~')
+let s:lnum = expand('<slnum>') + 2
 function! SpaceVim#layers#unite#config() abort
+  call SpaceVim#mapping#space#def('nnoremap', ['b', 'b'], 'Unite buffer', 'buffer list', 1)
+  call SpaceVim#mapping#space#def('nnoremap', ['h', 'i'], 'UniteWithCursorWord help', 'get help with the symbol at point', 1)
+  call SpaceVim#mapping#space#def('nnoremap', ['f', 'r'], 'Unite file_mru', 'open-recent-file', 1)
+  call SpaceVim#mapping#space#def('nnoremap', ['r', 'l'], 'Unite resume', 'resume unite buffer', 1)
+  if has('nvim')
+    let cmd = 'Unite file_rec/neovim'
+  else
+    let cmd = 'Unite file_rec/async'
+  endif
+  let lnum = expand('<slnum>') + s:lnum - 1
+  call SpaceVim#mapping#space#def('nnoremap', ['p', 'f'],
+        \ cmd,
+        \ ['find files in current project',
+        \ [
+        \ '[SPC p f] is to find files in the root of the current project',
+        \ '',
+        \ 'Definition: ' . s:filename . ':' . lnum,
+        \ ]
+        \ ]
+        \ , 1)
   call SpaceVim#mapping#space#def('nnoremap', ['!'], 'call call('
         \ . string(s:_function('s:run_shell_cmd')) . ', [])',
         \ 'shell cmd(current dir)', 1)
@@ -60,6 +82,17 @@ function! SpaceVim#layers#unite#config() abort
   endif
   let g:_spacevim_mappings.f = {'name' : '+Fuzzy Finder'}
   call s:defind_fuzzy_finder()
+  let lnum = expand('<slnum>') + s:lnum - 1
+  call SpaceVim#mapping#space#def('nnoremap', ['f', 'f'],
+        \ 'UniteWithBufferDir file_rec/' . (has('nvim') ? 'neovim' : 'async'),
+        \ ['Find files in the directory of the current buffer',
+        \ [
+        \ '[SPC f f] is to find files in the directory of the current buffer',
+        \ '',
+        \ 'Definition: ' . s:filename . ':' . lnum,
+        \ ]
+        \ ]
+        \ , 1)
 endfunction
 
 let s:file = expand('<sfile>:~')
@@ -155,7 +188,7 @@ function! s:defind_fuzzy_finder() abort
   nnoremap <silent> <Leader>f<Space>
         \ :<C-u>Unite menu:CustomKeyMaps<CR>
   let lnum = expand('<slnum>') + s:unite_lnum - 4
-  let g:_spacevim_mappings.f['<Space>'] = ['Unite menu:CustomKeyMaps',
+  let g:_spacevim_mappings.f['[SPC]'] = ['Unite menu:CustomKeyMaps',
         \ 'fuzzy find custom key bindings',
         \ [
         \ '[Leader f SPC] is to fuzzy find custom key bindings',

@@ -8,19 +8,24 @@
 
 function! SpaceVim#layers#lang#javascript#plugins() abort
   let plugins = [
-     \ ['Galooshi/vim-import-js', {
-     \ 'on_ft': 'javascript', 'build' : 'npm install -g import-js' }],
-     \ ['heavenshell/vim-jsdoc', { 'on_cmd': 'JsDoc' }],
-     \ ['maksimr/vim-jsbeautify', { 'on_ft': 'javascript' }],
-     \ ['mmalecki/vim-node.js', { 'on_ft': 'javascript' }],
-     \ ['moll/vim-node', { 'on_ft': 'javascript' }],
-     \ ['neoclide/vim-jsx-improve', { 'on_ft': 'javascript' }],
-     \ ['othree/es.next.syntax.vim', { 'on_ft': 'javascript' }],
-     \ ['othree/javascript-libraries-syntax.vim', {
-     \ 'on_ft': ['javascript', 'coffee', 'ls', 'typescript'] }],
-     \ ['othree/yajs.vim', { 'on_ft': 'javascript' }],
-     \ ['pangloss/vim-javascript', { 'on_ft': 'javascript' }],
-     \ ]
+        \ ['Galooshi/vim-import-js', {
+        \ 'on_ft': 'javascript', 'build' : 'npm install -g import-js' }],
+        \ ['heavenshell/vim-jsdoc', { 'on_cmd': 'JsDoc' }],
+        \ ['maksimr/vim-jsbeautify', { 'on_ft': 'javascript' }],
+        \ ['mmalecki/vim-node.js', { 'on_ft': 'javascript' }],
+        \ ['moll/vim-node', { 'on_ft': 'javascript' }],
+        \ ['neoclide/vim-jsx-improve', { 'on_ft': 'javascript' }],
+        \ ['othree/es.next.syntax.vim', { 'on_ft': 'javascript' }],
+        \ ['othree/javascript-libraries-syntax.vim', {
+        \ 'on_ft': ['javascript', 'coffee', 'ls', 'typescript'] }],
+        \ ]
+
+  if s:enable_flow_syntax
+    call add(plugins, ['flowtype/vim-flow', { 'on_ft': 'javascript' }])
+    let g:flow#enable = 0
+  else
+    call add(plugins, ['othree/yajs.vim', { 'on_ft': 'javascript' }])
+  endif
 
   if !SpaceVim#layers#lsp#check_filetype('javascript')
     call add(plugins, ['ternjs/tern_for_vim', {
@@ -33,16 +38,16 @@ function! SpaceVim#layers#lang#javascript#plugins() abort
 endfunction
 
 let s:auto_fix = 0
+let s:enable_flow_syntax = 0
 
 function! SpaceVim#layers#lang#javascript#set_variable(var) abort
   let s:auto_fix = get(a:var, 'auto_fix', 0)
+  let s:enable_flow_syntax = get(a:var, 'enable_flow_syntax', 0)
 endfunction
 
 function! SpaceVim#layers#lang#javascript#config() abort
-  " pangloss/vim-javascript {{{
   let g:javascript_plugin_jsdoc = 1
   let g:javascript_plugin_flow = 1
-  " }}}
 
   call add(g:spacevim_project_rooter_patterns, 'package.json')
 
@@ -63,19 +68,18 @@ function! SpaceVim#layers#lang#javascript#config() abort
     " Use the fix option of eslint
     let g:neomake_javascript_eslint_args = ['-f', 'compact', '--fix']
   endif
-  
-  augroup SpaceVim_lang_javascript
-    autocmd!
-    autocmd FileType javascript setlocal foldmethod=syntax
-    if s:auto_fix
-      autocmd User NeomakeFinished checktime
-      autocmd FocusGained * checktime
-    endif
-  augroup END
+
+  if s:auto_fix
+    augroup SpaceVim_lang_javascript
+      autocmd!
+      autocmd User NeomakeFinished call <SID>checktime_if_javascript()
+      autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+      autocmd FocusGained * call <SID>checktime_if_javascript()
+    augroup END
+  endif
 endfunction
 
 function! s:on_ft() abort
-  " Galooshi/vim-import-js {{{
   nnoremap <silent><buffer> <F4> :ImportJSWord<CR>
   nnoremap <silent><buffer> <Leader>ji :ImportJSWord<CR>
   nnoremap <silent><buffer> <Leader>jf :ImportJSFix<CR>
@@ -85,9 +89,7 @@ function! s:on_ft() abort
   inoremap <silent><buffer> <C-j>i <Esc>:ImportJSWord<CR>a
   inoremap <silent><buffer> <C-j>f <Esc>:ImportJSFix<CR>a
   inoremap <silent><buffer> <C-j>g <Esc>:ImportJSGoto<CR>a
-  " }}}
 
-  " heavenshell/vim-jsdoc {{{
 
   " Allow prompt for interactive input.
   let g:jsdoc_allow_input_prompt = 1
@@ -101,7 +103,6 @@ function! s:on_ft() abort
   " Enable to use ECMAScript6's Shorthand function, Arrow function.
   let g:jsdoc_enable_es6 = 1
 
-  " }}}
 
   if SpaceVim#layers#lsp#check_filetype('javascript')
     nnoremap <silent><buffer> K :call SpaceVim#lsp#show_doc()<CR>
@@ -129,6 +130,12 @@ endfunction
 function! s:tern_go_to_def() abort
   if exists(':TernDef')
     TernDef
+  endif
+endfunction
+
+function! s:checktime_if_javascript() abort
+  if (&filetype =~# '^javascript')
+    checktime
   endif
 endfunction
 

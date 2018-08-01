@@ -36,8 +36,10 @@ function! SpaceVim#layers#autocomplete#plugins() abort
         \ ['Shougo/neoinclude.vim',       { 'on_event' : 'InsertEnter'}],
         \ ['Shougo/neosnippet-snippets',  { 'merged' : 0}],
         \ ['Shougo/neopairs.vim',         { 'on_event' : 'InsertEnter'}],
-        \ ['Raimondi/delimitMate',        { 'merged' : 0}],
         \ ]
+  if g:spacevim_autocomplete_parens
+    call add(plugins, ['Raimondi/delimitMate',        { 'merged' : 0}])
+  endif
   " snippet
   if g:spacevim_snippet_engine ==# 'neosnippet'
     call add(plugins,  ['Shougo/neosnippet.vim', { 'on_event' : 'InsertEnter',
@@ -107,17 +109,20 @@ endfunction
 
 
 function! SpaceVim#layers#autocomplete#config() abort
-  imap <expr>( 
-        \ pumvisible() ? 
-        \ complete_parameter#pre_complete("()") : 
-        \ (len(maparg('<Plug>delimitMate(', 'i')) == 0) ?
-        \ "\<Plug>delimitMate(" :
-        \ '('
+  if g:spacevim_autocomplete_parens
+    imap <expr>(
+          \ pumvisible() ?
+          \ complete_parameter#pre_complete("()") :
+          \ (len(maparg('<Plug>delimitMate(', 'i')) == 0) ?
+          \ "\<Plug>delimitMate(" :
+          \ '('
+  endif
 
   "mapping
   if s:tab_key_behavior ==# 'smart'
     if has('patch-7.4.774')
       imap <silent><expr><TAB> SpaceVim#mapping#tab()
+      imap <silent><expr><S-TAB> SpaceVim#mapping#shift_tab()
       if g:spacevim_snippet_engine ==# 'neosnippet'
         smap <expr><TAB>
               \ neosnippet#expandable_or_jumpable() ?
@@ -125,18 +130,14 @@ function! SpaceVim#layers#autocomplete#config() abort
               \ (complete_parameter#jumpable(1) ?
               \ "\<plug>(complete_parameter#goto_next_parameter)" :
               \ "\<TAB>")
-        imap <silent><expr><S-TAB> SpaceVim#mapping#shift_tab()
       elseif g:spacevim_snippet_engine ==# 'ultisnips'
-        imap <silent><expr><TAB> SpaceVim#mapping#tab()
-        imap <silent><expr><S-TAB> SpaceVim#mapping#shift_tab()
         snoremap <silent> <TAB>
               \ <ESC>:call UltiSnips#JumpForwards()<CR>
         snoremap <silent> <S-TAB>
               \ <ESC>:call UltiSnips#JumpBackwards()<CR>
-      else
       endif
     else
-      call SpaceVim#logger#warn('smart tab in autocomplete layer need patch 7.4.774')
+      call SpaceVim#logger#info('smart tab in autocomplete layer need patch 7.4.774')
     endif
   elseif s:tab_key_behavior ==# 'complete'
     inoremap <expr> <Tab>       pumvisible() ? "\<C-y>" : "\<C-n>"
@@ -157,9 +158,14 @@ function! SpaceVim#layers#autocomplete#config() abort
   inoremap <expr> <PageDown> pumvisible() ? "\<PageDown>\<C-p>\<C-n>" : "\<PageDown>"
   inoremap <expr> <PageUp>   pumvisible() ? "\<PageUp>\<C-p>\<C-n>" : "\<PageUp>"
   " in origin vim or neovim Alt + / will insert a /, this should be disabled.
-  imap <expr> <M-/>
-        \ neosnippet#expandable() ?
-        \ "\<Plug>(neosnippet_expand)" : ""
+  let g:complete_parameter_use_ultisnips_mapping = 1
+  if g:spacevim_snippet_engine ==# 'neosnippet'
+    imap <expr> <M-/>
+          \ neosnippet#expandable() ?
+          \ "\<Plug>(neosnippet_expand)" : ""
+  elseif g:spacevim_snippet_engine ==# 'ultisnips'
+    inoremap <silent> <M-/> <C-R>=UltiSnips#ExpandSnippetOrJump()<cr>
+  endif
 
   let g:_spacevim_mappings_space.i = {'name' : '+Insertion'}
   if g:spacevim_snippet_engine ==# 'neosnippet'

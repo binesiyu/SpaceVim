@@ -22,12 +22,14 @@ let g:vimfiler_ignore_pattern = get(g:, 'vimfiler_ignore_pattern', [
       \ '^\.'
       \])
 
-if has('mac')
-  let g:vimfiler_quick_look_command =
-        \ '/Applications//Sublime\ Text.app/Contents/MacOS/Sublime\ Text'
-else
-  let g:vimfiler_quick_look_command = 'gloobus-preview'
+if has('mac') 
+   let g:vimfiler_quick_look_command = 
+         \ get(g:, 'vimfiler_quick_look_command', 'qlmanage -p') 
+else 
+   let g:vimfiler_quick_look_command = 
+        \ get(g:, 'vimfiler_quick_look_command', 'gloobus-preview') 
 endif
+
 function! s:setcolum() abort
   if g:spacevim_enable_vimfiler_filetypeicon && !g:spacevim_enable_vimfiler_gitstatus
     return 'filetypeicon'
@@ -81,8 +83,8 @@ function! s:vimfilerinit()
   nnoremap <silent><buffer> gr  :<C-u>Denite grep:<C-R>=<SID>selected()<CR> -buffer-name=grep<CR>
   nnoremap <silent><buffer> gf  :<C-u>Denite file_rec:<C-R>=<SID>selected()<CR><CR>
   nnoremap <silent><buffer> gd  :<C-u>call <SID>change_vim_current_dir()<CR>
-  nnoremap <silent><buffer><expr> sg  vimfiler#do_action('vsplit')
-  nnoremap <silent><buffer><expr> sv  vimfiler#do_action('split')
+  nnoremap <silent><buffer> sg  :<C-u>call <SID>vimfiler_vsplit()<CR>
+  nnoremap <silent><buffer> sv  :<C-u>call <SID>vimfiler_split()<CR>
   nnoremap <silent><buffer><expr> st  vimfiler#do_action('tabswitch')
   nnoremap <silent><buffer> yY  :<C-u>call <SID>copy_to_system_clipboard()<CR>
   nnoremap <silent><buffer> P  :<C-u>call <SID>paste_to_file_manager()<CR>
@@ -97,6 +99,29 @@ function! s:vimfilerinit()
   nmap <buffer> <Left>  <Plug>(vimfiler_smart_h)
   nmap <buffer> <Right> <Plug>(vimfiler_smart_l)
 endf
+
+function! s:vimfiler_vsplit() abort
+  let path = vimfiler#get_filename()
+  if !isdirectory(path)
+    wincmd w
+    exe 'vsplit' path
+  else
+    echohl ModeMsg
+    echo path . ' is a directory!'
+    echohl NONE
+  endif
+endfunction
+function! s:vimfiler_split() abort
+  let path = vimfiler#get_filename()
+  if !isdirectory(path)
+    wincmd w
+    exe 'split' path
+  else
+    echohl ModeMsg
+    echo path . ' is a directory!'
+    echohl NONE
+  endif
+endfunction
 
 function! s:paste_to_file_manager() abort
   let path = vimfiler#get_filename()

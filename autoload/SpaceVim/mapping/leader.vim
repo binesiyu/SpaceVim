@@ -172,11 +172,7 @@ endfunction
 
 
 function! SpaceVim#mapping#leader#getName(key) abort
-  if a:key == g:spacevim_unite_leader
-    return '[unite]'
-  elseif a:key == g:spacevim_denite_leader
-    return '[denite]'
-  elseif a:key == ' '
+  if a:key == ' '
     return '[SPC]'
   elseif a:key == 'g'
     return '[g]'
@@ -193,8 +189,10 @@ endfunction
 
 function! SpaceVim#mapping#leader#defindKEYs() abort
   let g:_spacevim_mappings_prefixs = {}
-  let g:_spacevim_mappings_prefixs[g:spacevim_windows_leader] = {'name' : '+Window prefix'}
-  call extend(g:_spacevim_mappings_prefixs[g:spacevim_windows_leader], g:_spacevim_mappings_windows)
+  if !g:spacevim_vimcompatible
+    let g:_spacevim_mappings_prefixs[g:spacevim_windows_leader] = {'name' : '+Window prefix'}
+    call extend(g:_spacevim_mappings_prefixs[g:spacevim_windows_leader], g:_spacevim_mappings_windows)
+  endif
   let g:_spacevim_mappings_prefixs['g'] = {'name' : '+g prefix'}
   call extend(g:_spacevim_mappings_prefixs['g'], g:_spacevim_mappings_g)
   let g:_spacevim_mappings_prefixs['z'] = {'name' : '+z prefix'}

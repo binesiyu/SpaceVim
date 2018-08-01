@@ -23,6 +23,7 @@ function! SpaceVim#layers#lang#markdown#plugins() abort
   call add(plugins, ['mzlogin/vim-markdown-toc',{ 'on_ft' : 'markdown'}])
   call add(plugins, ['iamcco/mathjax-support-for-mkdp',{ 'on_ft' : 'markdown'}])
   call add(plugins, ['iamcco/markdown-preview.vim', { 'depends' : 'open-browser.vim', 'on_ft' : 'markdown' }])
+  call add(plugins, ['lvht/tagbar-markdown',{'merged' : 0}])
   return plugins
 endfunction
 
@@ -50,6 +51,10 @@ function! SpaceVim#layers#lang#markdown#config() abort
   let g:mkdp_browserfunc = 'openbrowser#open'
   " }}}
   call SpaceVim#mapping#space#regesit_lang_mappings('markdown', function('s:mappings'))
+  augroup spacevim_layer_lang_markdown
+    autocmd!
+    autocmd FileType markdown setlocal omnifunc=htmlcomplete#CompleteTags
+  augroup END
 endfunction
 
 function! s:mappings() abort

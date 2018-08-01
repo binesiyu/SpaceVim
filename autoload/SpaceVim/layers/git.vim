@@ -15,6 +15,9 @@ function! SpaceVim#layers#git#plugins() abort
   else
     call add(plugins, ['lambdalisue/vim-gita', { 'on_cmd' : 'Gita'}])
   endif
+  if g:spacevim_filemanager ==# 'nerdtree'
+    call add(plugins, ['Xuyuanp/nerdtree-git-plugin', {'merged' : 0}])
+  endif
   return plugins
 endfunction
 
@@ -45,6 +48,9 @@ function! SpaceVim#layers#git#config() abort
     autocmd FileType diff nnoremap <buffer><silent> q :bd!<CR>
     autocmd FileType gitcommit setl omnifunc=SpaceVim#plugins#gitcommit#complete
     autocmd User GitGutter let &l:statusline = SpaceVim#layers#core#statusline#get(1)
+    " Instead of reverting the cursor to the last position in the buffer, we
+    " set it to the first line when editing a git commit message
+    au FileType gitcommit au! BufEnter COMMIT_EDITMSG call setpos('.', [0, 1, 1, 0])
   augroup END
   call SpaceVim#mapping#space#def('nnoremap', ['g', 'M'], 'call call('
         \ . string(function('s:display_last_commit_of_current_line')) . ', [])',

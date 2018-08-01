@@ -1,9 +1,9 @@
 ---
 title: "SpaceVim autocomplete layer"
-description: "This layer provides auto-completion to SpaceVim"
+description: "Autocomplete code within SpaceVim, fuzzy find the candidates from multiple completion sources, expand snippet before cursor automatically"
 ---
 
-# [SpaceVim Layers:](https://spacevim.org/layers) autocomplete
+# [Available Layers](../) >> autocomplete
 
 <!-- vim-markdown-toc GFM -->
 
@@ -35,10 +35,11 @@ Snippets are supported via [neosnippet](https://github.com/Shougo/neosnippet.vim
 
 ## Install
 
-To use this configuration layer, add it to your custom configuration file.
+To use this configuration layer, add following snippet to your custom configuration file.
 
-```vim
-call SpaceVim#layers#load('autocomplete')
+```toml
+[[layers]]
+  name = "autocomplete"
 ```
 
 ## Configuration

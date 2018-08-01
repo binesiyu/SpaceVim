@@ -13,14 +13,21 @@ function! SpaceVim#issue#report() abort
 endfunction
 
 function! s:open() abort
-  exe 'tabnew ' . tempname() . '/issue_report.md'
+  exe 'silent tabnew ' . tempname() . '/issue_report.md'
   let b:spacevim_issue_template = 1
   let template = s:template()
   call setline(1, template)
   let @+ = join(template, "\n")
-  w
+  silent w
 endfunction
 
+function! s:spacevim_status() abort
+  let pwd = getcwd()
+  exe 'cd ' . fnamemodify(g:_spacevim_root_dir, ':p:h:h')
+  let status = system('git status')
+  exe 'cd ' . pwd
+  return split(status, "\n")
+endfunction
 
 function! s:template() abort
   let info = [
@@ -29,15 +36,23 @@ function! s:template() abort
         \ '',
         \ '## Environment Information',
         \ '',
-        \ '- OS:' . SpaceVim#api#import('system').name(),
-        \ '- vim version:' . (has('nvim') ? '' : s:CMP.version()),
-        \ '- neovim version:' . (has('nvim') ? s:CMP.version() : ''),
+        \ '- OS: ' . SpaceVim#api#import('system').name,
+        \ '- vim version: ' . (has('nvim') ? '-' : s:CMP.version()),
+        \ '- neovim version: ' . (has('nvim') ? s:CMP.version() : '-'),
+        \ '- SpaceVim version: ' . g:spacevim_version,
+        \ '- SpaceVim status: ',
+        \ '',
+        \ '```'
+        \ ]
+        \ + s:spacevim_status() +
+        \ [
+        \ '```',
         \ '',
         \ '## The reproduce ways from Vim starting (Required!)',
         \ '',
         \ '## Output of the `:SPDebugInfo!`',
         \ '']
-        \ + split(SpaceVim#api#import('vim#compatible').execute(':SPDebugInfo'), "\n") +
+        \ + split(s:CMP.execute(':SPDebugInfo'), "\n") +
         \ [
         \ '## Screenshots',
         \ '',
@@ -48,7 +63,7 @@ endfunction
 
 
 
-function! SpaceVim#issue#new()
+function! SpaceVim#issue#new() abort
   if get(b:, 'spacevim_issue_template', 0) == 1
     let title = input('Issue title:')
     let username = input('github username:')

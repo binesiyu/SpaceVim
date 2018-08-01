@@ -84,7 +84,7 @@ On_IWhite='\033[0;107m'   # White
 # }}}
 
 # version
-Version='0.8.0-dev'
+Version='0.9.0-dev'
 #System name
 System="$(uname -s)"
 
@@ -124,7 +124,7 @@ warn () {
 
 # echo_with_color {{{
 echo_with_color () {
-  printf '%b\n' "$1$2" >&2
+  printf '%b\n' "$1$2$Color_off" >&2
 }
 # }}}
 
@@ -335,7 +335,7 @@ welcome () {
     echo_with_color ${Yellow} "               | ##                                                           "
     echo_with_color ${Yellow} "               | ##                                                           "
     echo_with_color ${Yellow} "               |__/                                                           "
-    echo_with_color ${Yellow} "                    版本 : 0.8.0-dev  中文官网 : https://spacevim.org/cn/     "
+    echo_with_color ${Yellow} "                    版本 : 0.9.0-dev  中文官网 : https://spacevim.org/cn/     "
 }
 
 # }}}

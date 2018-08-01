@@ -17,15 +17,44 @@ function! SpaceVim#layers#denite#plugins() abort
   call add(plugins, ['chemzqm/unite-location', {'merged' : 0}])
   call add(plugins, ['Shougo/unite-outline', {'merged' : 0}])
   call add(plugins, ['ozelentok/denite-gtags', {'merged' : 0}])
+  call add(plugins, ['Shougo/neomru.vim', {'merged' : 0}])
   return plugins
 endfunction
 
+let s:filename = expand('<sfile>:~')
+let s:lnum = expand('<slnum>') + 2
 function! SpaceVim#layers#denite#config() abort
+  call SpaceVim#mapping#space#def('nnoremap', ['b', 'b'], 'Denite buffer', 'buffer list', 1)
+  call SpaceVim#mapping#space#def('nnoremap', ['f', 'r'], 'Denite file_mru', 'open-recent-file', 1)
   call SpaceVim#mapping#space#def('nnoremap', ['j', 'i'], 'Denite outline', 'jump to a definition in buffer', 1)
+  call SpaceVim#mapping#space#def('nnoremap', ['r', 'l'], 'Denite -resume', 'resume denite buffer', 1)
   nnoremap <silent> <C-p> :Denite file_rec<cr>
   call SpaceVim#mapping#space#def('nnoremap', ['T', 's'], 'Denite colorscheme', 'fuzzy find colorschemes', 1)
   let g:_spacevim_mappings.f = {'name' : '+Fuzzy Finder'}
   call s:defind_fuzzy_finder()
+  let lnum = expand('<slnum>') + s:lnum - 1
+  call SpaceVim#mapping#space#def('nnoremap', ['f', 'f'],
+        \ 'DeniteBufferDir file_rec',
+        \ ['Find files in the directory of the current buffer',
+        \ [
+        \ '[SPC f f] is to find files in the directory of the current buffer',
+        \ '',
+        \ 'Definition: ' . s:filename . ':' . lnum,
+        \ ]
+        \ ]
+        \ , 1)
+  let lnum = expand('<slnum>') + s:lnum - 1
+  call SpaceVim#mapping#space#def('nnoremap', ['p', 'f'],
+        \ 'Denite file_rec',
+        \ ['find files in current project',
+        \ [
+        \ '[SPC p f] is to find files in the root of the current project',
+        \ '',
+        \ 'Definition: ' . s:filename . ':' . lnum,
+        \ ]
+        \ ]
+        \ , 1)
+  call SpaceVim#mapping#space#def('nnoremap', ['h', 'i'], 'DeniteCursorWord help', 'get help with the symbol at point', 1)
 endfunction
 
 let s:file = expand('<sfile>:~')

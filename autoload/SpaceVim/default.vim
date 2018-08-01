@@ -35,7 +35,6 @@ function! SpaceVim#default#options() abort
   " begining start delete the char you just typed in if you do not use set
   " nocompatible ,you need this
   set backspace=indent,eol,start
-  set smarttab
   set nrformats-=octal
   set listchars=tab:→\ ,eol:↵,trail:·,extends:↷,precedes:↶
   set fillchars=vert:│,fold:·
@@ -56,12 +55,6 @@ function! SpaceVim#default#options() abort
   " do not break words.
   set linebreak
 
-  " tab options:
-  set tabstop=4
-  set expandtab
-  set softtabstop=4
-  set shiftwidth=4
-
   " Enable line number
   set number
 
@@ -78,22 +71,27 @@ function! SpaceVim#default#options() abort
   let g:backup_dir = g:data_dir . 'backup'
   let g:swap_dir = g:data_dir . 'swap'
   let g:undo_dir = g:data_dir . 'undofile'
+  let g:conf_dir = g:data_dir . 'conf'
   if finddir(g:data_dir) ==# ''
-    silent call mkdir(g:data_dir)
+    silent call mkdir(g:data_dir, 'p', 0700)
   endif
   if finddir(g:backup_dir) ==# ''
-    silent call mkdir(g:backup_dir)
+    silent call mkdir(g:backup_dir, 'p', 0700)
   endif
   if finddir(g:swap_dir) ==# ''
-    silent call mkdir(g:swap_dir)
+    silent call mkdir(g:swap_dir, 'p', 0700)
   endif
   if finddir(g:undo_dir) ==# ''
-    silent call mkdir(g:undo_dir)
+    silent call mkdir(g:undo_dir, 'p', 0700)
+  endif
+  if finddir(g:conf_dir) ==# ''
+    silent call mkdir(g:conf_dir, 'p', 0700)
   endif
   unlet g:data_dir
   unlet g:backup_dir
   unlet g:swap_dir
   unlet g:undo_dir
+  unlet g:conf_dir
   set undodir=$HOME/.cache/SpaceVim/undofile
   set backupdir=$HOME/.cache/SpaceVim/backup
   set directory=$HOME/.cache/SpaceVim/swap
@@ -125,6 +123,7 @@ function! SpaceVim#default#options() abort
     " don't give ins-completion-menu messages.
     set shortmess+=c
   endif
+  set shortmess+=s
   " Do not wrap lone lines
   set nowrap
 
@@ -158,7 +157,6 @@ function! SpaceVim#default#keyBindings() abort
   xnoremap <Leader>p "+p
   xnoremap <Leader>P "+P
 
-  cnoremap <Leader><C-F> <C-F>
 
   " Location list movement
   let g:_spacevim_mappings.l = {'name' : '+Location movement'}
@@ -193,13 +191,6 @@ function! SpaceVim#default#keyBindings() abort
         \ 'Toggle recording',
         \ '',
         \ 'Toggle recording mode')
-
-  " Save a file with sudo
-  " http://forrst.com/posts/Use_w_to_sudo_write_a_file_with_Vim-uAN
-  " use w!! in cmdline or use W command to sudo write a file
-  cnoremap w!! %!sudo tee > /dev/null %
-  command! W w !sudo tee % > /dev/null
-
 
   " Use Ctrl+* to jump between windows
   nnoremap <silent><C-Right> :<C-u>wincmd l<CR>
@@ -265,13 +256,11 @@ function! SpaceVim#default#keyBindings() abort
   nnoremap <silent><Down> gj
   nnoremap <silent><Up> gk
 
-
-  " Use Q format lines
-  map Q gq
-
   " Navigate window
   nnoremap <silent><C-q> <C-w>
-  nnoremap <silent><C-x> <C-w>x
+  if !g:spacevim_vimcompatible
+    nnoremap <silent><C-x> <C-w>x
+  endif
 
   " Navigation in command line
   cnoremap <C-a> <Home>
@@ -307,8 +296,8 @@ function! SpaceVim#default#keyBindings() abort
   nnoremap <silent><M-3> :<C-u>call <SID>tobur(3)<CR>
   nnoremap <silent><M-4> :<C-u>call <SID>tobur(4)<CR>
   nnoremap <silent><M-5> :<C-u>call <SID>tobur(5)<CR>
-  nnoremap <silent><M-Right> :<C-U>call <SID>tobur("bnext")<CR>
-  nnoremap <silent><M-Left> :<C-U>call <SID>tobur("bprev")<CR>
+  nnoremap <silent><M-Right> :<C-U>call <SID>tobur("next")<CR>
+  nnoremap <silent><M-Left> :<C-U>call <SID>tobur("prev")<CR>
 
   call SpaceVim#mapping#def('nnoremap <silent>','<M-x>',':call chat#qq#OpenMsgWin()<cr>',
         \ 'Open qq chatting room','call chat#chatting#OpenMsgWin()')
@@ -321,16 +310,23 @@ function! SpaceVim#default#keyBindings() abort
 
   call SpaceVim#mapping#def('nnoremap <silent>', '<C-c>', ':<c-u>call zvim#util#CopyToClipboard()<cr>',
         \ 'Copy buffer absolute path to X11 clipboard','call zvim#util#CopyToClipboard()')
-  call SpaceVim#mapping#def('nnoremap <silent>', '<Tab>', ':wincmd w<CR>', 'Switch to next window or tab','wincmd w')
-  call SpaceVim#mapping#def('nnoremap <silent>', '<S-Tab>', ':wincmd p<CR>', 'Switch to previous window or tab','wincmd p')
 endfunction
 
 fu! s:tobur(num) abort
   if index(get(g:,'spacevim_altmoveignoreft',[]), &filetype) == -1
-    if a:num ==# 'bnext'
-      bnext
-    elseif a:num ==# 'bprev'
-      bprev
+    if a:num ==# 'next'
+      if tabpagenr('$') > 1
+        tabnext
+      else
+        bnext
+      endif
+
+    elseif a:num ==# 'prev'
+      if tabpagenr('$') > 1
+        tabprevious
+      else
+        bprev
+      endif
     else
       let ls = split(execute(':ls'), "\n")
       let buffers = []

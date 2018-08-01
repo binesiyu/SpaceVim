@@ -3,12 +3,12 @@ title: "SpaceVim lang#ruby layer"
 description: "This layer is for ruby development, provide autocompletion, syntax checking, code format for ruby file."
 ---
 
-# [SpaceVim Layers:](https://spacevim.org/layers) lang#ruby
+# [Available Layers](../../) >> lang#ruby
 
 <!-- vim-markdown-toc GFM -->
 
 - [Description](#description)
-- [Installation](#installation)
+- [Install](#install)
   - [Layer](#layer)
   - [Syntax checking && Code formatting](#syntax-checking--code-formatting)
 - [Key bindings](#key-bindings)
@@ -22,15 +22,20 @@ description: "This layer is for ruby development, provide autocompletion, syntax
 
 This layer is for ruby development.
 
-## Installation
+## Install
 
 ### Layer
 
-To use this configuration layer, add `SPLayer 'lang#ruby'` to your custom configuration file.
+To use this configuration layer, update custom configuration file with:
+
+```toml
+[[layers]]
+  name = "lang#ruby"
+```
 
 ### Syntax checking && Code formatting
 
-To enable syntax checking and code formatting in spacevim, you need to install [cobocop](https://github.com/bbatsov/rubocop).
+To enable syntax checking and code formatting in spacevim, you need to install [rubocop](https://github.com/bbatsov/rubocop).
 
 ```sh
 gem install rubocop

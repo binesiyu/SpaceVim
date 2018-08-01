@@ -4,7 +4,7 @@
   <head>
     <meta name="baidu-site-verification" content="AN14j6xQVd" />
     {% seo %}
-    <script type="text/javascript" src="http://tajs.qq.com/stats?sId=60680063" charset="UTF-8"></script>
+    <script type="text/javascript" src="https://tajs.qq.com/stats?sId=60680063" charset="UTF-8"></script>
     <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
     <script>
       (function(w, d, s, l, i) {
@@ -23,11 +23,21 @@
   s.parentNode.insertBefore(hm, s);
 })();
     </script>
+
+    {% if page.lang == "cn" %}
+    <script>
+      ((window.gitter = {}).chat = {}).options = {
+        room: 'SpaceVim/cn'
+      };
+    </script>
+    {% else %}
     <script>
       ((window.gitter = {}).chat = {}).options = {
         room: 'SpaceVim/SpaceVim'
       };
     </script>
+    {% endif %}
+
     <script src="https://sidecar.gitter.im/dist/sidecar.v1.js" async defer></script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
@@ -42,7 +52,7 @@
         if (curProtocol === 'https') {
           bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
         } else {
-          bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+          bp.src = 'https://push.zhanzhang.baidu.com/push.js';
         }
         var s = document.getElementsByTagName("script")[0];
         s.parentNode.insertBefore(bp, s);
@@ -62,29 +72,31 @@
         </div>
         {% if page.lang == "cn" %}
         <div id="title">
-          <p>{{ site.description | default: site.github.project_tagline }}</p>
+          <p>{{ site.description | default: site.github.project_tagline }}
+          </p>
           <hr>
           <p align="center">
           <b><a href="{{ site.url }}/cn/">主页</a></b> |
-          <b><a href="{{ site.url }}/cn/about">关于我们</a></b> |
-          <b><a href="{{ site.url }}/cn/documentation">使用文档</a></b> |
-          <b><a href="{{ site.url }}/cn/development">开发指南</a></b> |
-          <b><a href="{{ site.url }}/cn/community">用户社区</a></b> |
-          <b><a href="{{ site.url }}/cn/sponsors">赞助</a></b>
+          <b><a href="{{ site.url }}/cn/about/">关于我们</a></b> |
+          <b><a href="{{ site.url }}/cn/documentation/">使用文档</a></b> |
+          <b><a href="{{ site.url }}/cn/development/">开发指南</a></b> |
+          <b><a href="{{ site.url }}/cn/community/">用户社区</a></b> |
+          <b><a href="{{ site.url }}/cn/sponsors/">赞助</a></b>
           </p>
           <hr>
         </div>
         {% else %}
         <div id="title">
-          <p>{{ site.description | default: site.github.project_tagline }}</p>
+          <p>{{ site.description | default: site.github.project_tagline }}
+          </p>
           <hr>
           <p align="center">
           <b><a href="{{ site.url }}">Home</a></b> |
-          <b><a href="{{ site.url }}/about">About</a></b> |
-          <b><a href="{{ site.url }}/documentation">Documentation</a></b> |
-          <b><a href="{{ site.url }}/development">Development</a></b> |
-          <b><a href="{{ site.url }}/community">Community</a></b> |
-          <b><a href="{{ site.url }}/sponsors">Sponsors</a></b>
+          <b><a href="{{ site.url }}/about/">About</a></b> |
+          <b><a href="{{ site.url }}/documentation/">Documentation</a></b> |
+          <b><a href="{{ site.url }}/development/">Development</a></b> |
+          <b><a href="{{ site.url }}/community/">Community</a></b> |
+          <b><a href="{{ site.url }}/sponsors/">Sponsors</a></b>
           </p>
           <hr>
         </div>
@@ -94,20 +106,21 @@
 
         {% if page.comments %}
 
-        <div id="disqus_thread"></div>
-        <script>
-          var disqus_config = function () {
-            this.page.url = '{{ page.url | absolute_url }}';
-            this.page.identifier = '{{ page.url | absolute_url }}';
-          };
-(function() {
-  var d = document, s = d.createElement('script');
-  s.src = 'https://spacevim.disqus.com/embed.js';
-  s.setAttribute('data-timestamp', +new Date());
-  (d.head || d.body).appendChild(s);
-})();
-        </script>
-        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <div id="container"></div>
+            <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+            <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+            <script>
+            var gitment = new Gitment({
+              id: '{{ page.commentsID | default: page.title }}', // 可选。默认为 location.href
+              owner: 'wsdjeg',
+              repo: 'SpaceVim-comments',
+              oauth: {
+                client_id: '{{ site.gitment_client_id }}',
+                client_secret: '{{ site.gitment_client_secret }}',
+              },
+            })
+            gitment.render('container')
+            </script>
 
         {% endif %}
 
@@ -134,11 +147,13 @@ document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.
   <p align="center">
   <span class="credits right">网站源码位于 Github, <a href="https://github.com/SpaceVim/SpaceVim/edit/master/docs/{{ page.path }}">帮助改进本页面</a> &mdash; 网站主题: <a href="https://twitter.com/michigangraham">mattgraham</a>,
   </span>
+  <input id="textbox" type="text" placeholder="Search on Google..." onkeydown="if (event.keyCode == 13 || event.which == 13) { location='http://www.google.com/search?q=' + encodeURIComponent(document.getElementById('textbox').value) + '+site%3Aspacevim.org';}" />
   </p>
   {% else %}
   <p align="center">
-  <span class="credits right">Hosted on GitHub, <a href="https://github.com/SpaceVim/SpaceVim/edit/master/docs/{{ page.path }}">Help improve this page</a> &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a>,
+  <span class="credits right">Hosted on GitHub, <a href="https://github.com/SpaceVim/SpaceVim/edit/master/docs/{{ page.path }}">Help improve this page</a> &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a>, 
   </span>
+  <input id="textbox" type="text" placeholder="Search on Google..." onkeydown="if (event.keyCode == 13 || event.which == 13) { location='http://www.google.com/search?q=' + encodeURIComponent(document.getElementById('textbox').value) + '+site%3Aspacevim.org';}" />
   </p>
   {% endif %}
   </root>

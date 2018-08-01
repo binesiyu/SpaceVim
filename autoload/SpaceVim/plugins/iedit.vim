@@ -15,6 +15,7 @@ let s:Operator = ''
 
 let s:VIMH = SpaceVim#api#import('vim#highlight')
 let s:STRING = SpaceVim#api#import('data#string')
+let s:CMP = SpaceVim#api#import('vim#compatible')
 
 let s:cursor_stack = []
 
@@ -49,9 +50,9 @@ function! s:highlight_cursor() abort
   call s:VIMH.hi(info)
   for i in range(len(s:stack))
     if i == s:index
-      call matchaddpos('IeditPurpleBold', [s:stack[i]])
+      call s:CMP.matchaddpos('IeditPurpleBold', [s:stack[i]])
     else
-      call matchaddpos('IeditBlueBold', [s:stack[i]])
+      call s:CMP.matchaddpos('IeditBlueBold', [s:stack[i]])
     endif
     call matchadd('SpaceVimGuideCursor', '\%' . s:stack[i][0] . 'l\%' . (s:stack[i][1] + len(s:cursor_stack[i].begin)) . 'c', 99999)
   endfor
@@ -175,7 +176,7 @@ function! s:handle_normal(char) abort
       let s:cursor_stack[i].end = substitute(s:cursor_stack[i].end, '^.', '', 'g')
     endfor
     redrawstatus!
-  elseif a:char == "\<Left>"
+  elseif a:char == "\<Left>" || a:char == 104
     for i in range(len(s:cursor_stack))
       if !empty(s:cursor_stack[i].begin)
         let s:cursor_stack[i].end = s:cursor_stack[i].cursor . s:cursor_stack[i].end
@@ -183,22 +184,22 @@ function! s:handle_normal(char) abort
         let s:cursor_stack[i].begin = substitute(s:cursor_stack[i].begin, '.$', '', 'g')
       endif
     endfor
-  elseif a:char == "\<Right>"
+  elseif a:char == "\<Right>" || a:char == 108
     for i in range(len(s:cursor_stack))
       let s:cursor_stack[i].begin = s:cursor_stack[i].begin . s:cursor_stack[i].cursor
       let s:cursor_stack[i].cursor = matchstr(s:cursor_stack[i].end, '^.')
       let s:cursor_stack[i].end = substitute(s:cursor_stack[i].end, '^.', '', 'g')
     endfor
-  elseif a:char == 48 " 0
+  elseif a:char == 48 || a:char == "\<Home>" " 0 or <Home>
     for i in range(len(s:cursor_stack))
+      let s:cursor_stack[i].cursor = matchstr(s:cursor_stack[i].begin . s:cursor_stack[i].cursor . s:cursor_stack[i].end, '^.')
       let s:cursor_stack[i].end = substitute(s:cursor_stack[i].begin . s:cursor_stack[i].cursor . s:cursor_stack[i].end , '^.', '', 'g')
-      let s:cursor_stack[i].cursor = matchstr(s:cursor_stack[i].begin, '^.')
       let s:cursor_stack[i].begin = ''
     endfor
-  elseif a:char == 36 " $
+  elseif a:char == 36 || a:char == "\<End>"  " $ or <End>
     for i in range(len(s:cursor_stack))
+      let s:cursor_stack[i].cursor = matchstr(s:cursor_stack[i].begin . s:cursor_stack[i].cursor . s:cursor_stack[i].end, '.$')
       let s:cursor_stack[i].begin = substitute(s:cursor_stack[i].begin . s:cursor_stack[i].cursor . s:cursor_stack[i].end , '.$', '', 'g')
-      let s:cursor_stack[i].cursor = matchstr(s:cursor_stack[i].end, '.$')
       let s:cursor_stack[i].end = ''
     endfor
   elseif a:char == 68 " D
@@ -228,10 +229,12 @@ function! s:handle_normal(char) abort
     call s:replace_symbol()
   elseif a:char == 71 " G
     exe s:stack[-1][0]
+    let s:index = len(s:stack) - 1
   elseif a:char == 103 "g
     if s:Operator ==# 'g'
       exe s:stack[0][0]
       let s:Operator = ''
+      let s:index = 0
     else
       let s:Operator = 'g'
       call s:timeout()

@@ -18,8 +18,10 @@ lang: cn
   - [更新插件](#更新插件)
   - [获取日志](#获取日志)
 - [用户配置](#用户配置)
+  - [启动函数](#启动函数)
   - [Vim 兼容模式](#vim-兼容模式)
   - [私有模块](#私有模块)
+  - [调试上游插件](#调试上游插件)
 - [概念](#概念)
 - [优雅的界面](#优雅的界面)
   - [颜色主题](#颜色主题)
@@ -124,7 +126,7 @@ lang: cn
 - **更快的启动时间:** 得益于 dein.vim, SpaceVim 中90% 的插件都是按需载入的。
 - **更少的肌肉损伤:** 频繁使用空格键，取代 `ctrl`，`shift` 等按键，大大减少了手指的肌肉损伤。 
 - **更易扩展:** 依照一些[约定](http://spacevim.org/development/)，很容易将现有的插件集成到 SpaceVim 中来。
-- **完美支持Neovim:** 依赖于 Neovim 的 romote 插件以及 异步 API，SpaceVim 运行在 Neovim 下将有更加完美的体验。
+- **完美支持Neovim:** 依赖于 Neovim 的 romote 插件以及异步 API，SpaceVim 运行在 Neovim 下将有更加完美的体验。
 
 ## 运行截图
 
@@ -186,11 +188,11 @@ Neovim 运行在 iTerm2 上，采用 SpaceVim，配色为：_base16-solarized-da
 
 初次启动 SpaceVim 时，他将提供选择目录，用户需要选择合适自己的配置模板。此时，SpaceVim 将自动在 `HOME` 目录生成 `~/.SpaceVim.d/init.toml`。所有用户脚本可以存储在`~/.SpaceVim.d/`，这一文件夹将被加入 Vim 的运行时路径 `&runtimepath`。详情清阅读 `:h rtp`。
 
-当然，你也可以通过 `SPACEVIMDIR` 这一环境变量，执定用户配置目录。当然也可以通过软连接连改变目录位置，以便配置备份。
+当然，你也可以通过 `SPACEVIMDIR` 这一环境变量，指定用户配置目录。当然也可以通过软连接连改变目录位置，以便配置备份。
 
 SpaceVim 同时还支持项目本地配置，配置初始文件为，当前目录下的 `.SpaceVim.d/init.toml` 文件。同时当前目录下的 `.SpaceVim.d/` 也将被加入到 Vim 运行时路径。
 
-所有的 SpaceVim 选项可以使用 `:h SpaceVim-config` 来查看。选项名称未原先 Vim 脚本中使用的变量名称去处 `g:spacevim_` 前缀。
+所有的 SpaceVim 选项可以使用 `:h SpaceVim-config` 来查看。选项名称为原先 Vim 脚本中使用的变量名称去除 `g:spacevim_` 前缀。
 
 如果你需要添加自定义以 `SPC` 为前缀的快捷键，你需要使用 bootstrap function，在其中加入：
 
@@ -198,6 +200,28 @@ SpaceVim 同时还支持项目本地配置，配置初始文件为，当前目�
 call SpaceVim#custom#SPCGroupName(['G'], '+TestGroup')
 call SpaceVim#custom#SPC('nore', ['G', 't'], 'echom 1', 'echomessage 1', 1)
 ```
+
+### 启动函数
+
+由于 toml 配置的局限性，SpaceVim 提供了两种启动函数 `bootstrap_before` 和 `bootstrap_after`，在该函数内可以使用 Vim script。
+可通过设置这两个选项值来指定函数名称。
+
+启动函数文件应放置在 Vim &runtimepath 的 autoload 文件夹内。例如：
+
+文件名： `~/.SpaceVim.d/autoload/myspacevim.vim`
+
+```vim
+func! myspacevim#before() abort
+    let g:neomake_enabled_c_makers = ['clang']
+    nnoremap jk <esc>
+endf
+
+func! myspacevim#after() abort
+    iunmap jk
+endf
+```
+
+函数 `bootstrap_before` 将在读取用户配置后执行，而函数 `bootstrap_after` 将在 VimEnter autocmd 之后执行。
 
 ### Vim 兼容模式
 
@@ -232,6 +256,38 @@ SpaceVim 的[模块首页](../layers/)。
 - `SpaceVim#layers#autocomplete#plugins()`: 返回该模块插件列表
 - `SpaceVim#layers#autocomplete#config()`: 模块相关设置
 - `SpaceVim#layers#autocomplete#set_variable()`: 模块选项设置函数
+
+### 调试上游插件
+
+当发现某个内置上游插件存在问题时，需要修改并调试上游插件，可以依照以下步骤：
+
+1. 禁用内置上游插件
+
+比如，调试内置语法检查插件 neomake.vim
+
+```toml
+[option]
+    disabled_plugins = ["neomake.vim"]
+```
+
+2. 添加自己fork的插件，或者本地克隆版本：
+
+修搞配置文件 init.toml， 加入以下部分，来添加自己fork的版本：
+
+```toml
+[[custom_plugins]]
+   name = 'wsdjeg/neomake.vim'
+   # note: you need to disable merged feature
+   merged = false
+```
+
+或者使用 `bootstrap_before` 函数添加本地路径：
+
+```vim
+function! myspacevim#before() abort
+    set rtp+=~/path/to/your/localplugin
+endfunction
+```
 
 ## 概念
 
@@ -416,7 +472,7 @@ SpaceVim 所支持的分割符以及截图如下：
 **状态栏的颜色**
 
 当前版本的状态栏支持 `gruvbox`/`molokai`/`nord`/`one`/`onedark`，如果你需要使用其他主题，
-可以通过以下木板来设置：
+可以通过以下模板来设置：
 
 ```vim
 " the theme colors should be
@@ -473,7 +529,7 @@ custom_color_palette = [
 
 ### 标签栏
 
-如果只有一个Tab, Buffers 将被罗列在标签栏上，每一个包含：序号、文件类型图标、文件名。如果有不止一个 Tab, 那么所有 Tab 将被罗列在标签栏上。标签栏上每一个 Tab 或者 Baffer 可通过快捷键 `<Leader> number` 进行快速访问，默认的 `<Leader>` 是 `\`。
+如果只有一个Tab, Buffers 将被罗列在标签栏上，每一个包含：序号、文件类型图标、文件名。如果有不止一个 Tab, 那么所有 Tab 将被罗列在标签栏上。标签栏上每一个 Tab 或者 Buffer 可通过快捷键 `<Leader> number` 进行快速访问，默认的 `<Leader>` 是 `\`。
 
 | 快捷键       | 描述             |
 | ------------ | ---------------- |
@@ -632,7 +688,7 @@ features.
 
 | Key bindings         | Description                   |
 | -------------------- | ----------------------------- |
-| `<Leader> f <space>` | Fuzzy find menu:CustomKeyMaps |
+| `<Leader> f <Space>` | Fuzzy find menu:CustomKeyMaps |
 | `<Leader> f e`       | Fuzzy find register           |
 | `<Leader> f f`       | Fuzzy find file               |
 | `<Leader> f h`       | Fuzzy find history/yank       |
@@ -735,7 +791,7 @@ Denite/Unite 是一个强大的信息筛选浏览器，这类似于 emacs 中的
 
 | 快捷键      | 描述                                         |
 | ----------- | -------------------------------------------- |
-| `SPC h SPC` | 使用 Unite 展示 SpaceVim 帮助文档章节目录    |
+| `SPC h SPC` | 使用 fuzzy find 模块展示 SpaceVim 帮助文档章节目录    |
 | `SPC h i`   | 获取光标下单词的帮助信息                     |
 | `SPC h k`   | 使用快捷键导航，展示 SpaceVim 所支持的前缀键 |
 | `SPC h m`   | 使用 Unite 浏览所有 man 文档                 |
@@ -883,8 +939,8 @@ merged = 0
 | `SPC w TAB`/`<Tab>`  | 在统一标签内进行窗口切换                                                       |
 | `SPC w =`            | 对齐分离的窗口                                                                 |
 | `SPC w b`            | force the focus back to the minibuffer (TODO)                                  |
-| `SPC w c`            | 进入阅读模式，浏览当前窗口                                                     |
-| `SPC w C`            | 选择某一个窗口，并且进入阅读模式                                               |
+| `SPC w c`            | 进入阅读模式，浏览当前窗口 (需要 tools 模块)                                                     |
+| `SPC w C`            | 选择某一个窗口，并且进入阅读模式 (需要 tools 模块)                                               |
 | `SPC w d`            | 删除一个窗口                                                                   |
 | `SPC u SPC w d`      | delete a window and its current buffer (does not delete the file) (TODO)       |
 | `SPC w D`            | 选择一个窗口，并且关闭                                                         |
@@ -1001,7 +1057,7 @@ SpaceVim 使用 vimfiler 作为默认的文件树插件，默认的快捷键是 
 filemanager = "nerdtree"
 ```
 
-SpaceVim 的文件树提供了版本控制信息的借口，但是这一特性需要分析文件夹内容，
+SpaceVim 的文件树提供了版本控制信息的接口，但是这一特性需要分析文件夹内容，
 会使得文件树插件比较慢，因此默认没有打开，如果需要使用这一特性，
 可向配置文件中加入 `enable_vimfiler_gitstatus = true`，启用后的截图如下：
 
@@ -1165,7 +1221,7 @@ SpaceVim 中的搜索命令是以 `SPC s` 为前缀的, 前一个键是使用的
 
 如果工具键被省略了, 那么会用默认的搜索工具进行搜索. 默认的搜索工具对应在 `g:spacevim_search_tools` 
 列表中的第一个工具. 列表中的工具默认的顺序为: `rg`, `ag`, `pt`, `ack` then `grep`. 
-举个例子 如果 `rg` 和 `ag` 没有在系统中找到, 那么 `SPC s b` 会使用 `pt` 进行搜索.
+举个例子如果 `rg` 和 `ag` 没有在系统中找到, 那么 `SPC s b` 会使用 `pt` 进行搜索.
 
 下表是全部的工具键:
 
@@ -1338,7 +1394,7 @@ FlyGrep 缓冲区的按键绑定:
 #### 保持高亮
 
 SPaceVim 使用 `g:spacevim_search_highlight_persist` 保持当前搜索结果的高亮状态到下一次搜索.
-同样可以通过 `SPC s c` 或者 运行 ex 命令 `:noh` 来取消搜索结果的高亮表示.
+同样可以通过 `SPC s c` 或者运行 ex 命令 `:noh` 来取消搜索结果的高亮表示.
 
 #### Highlight current symbol
 
@@ -1583,7 +1639,7 @@ SpaceVim 通过 [neomake](https://github.com/neomake/neomake) fly 工具来进�
 | `SPC e v` | verify syntax checker setup (useful to debug 3rd party tools configuration) |
 | `SPC e .` | error transient state                                                       |
 
-下一个/上一个 错误导航键 和 错误暂态(error transinet state) 可用于浏览语法检查器和位置列表缓冲区的错误, 
+下一个/上一个错误导航键和错误暂态(error transinet state) 可用于浏览语法检查器和位置列表缓冲区的错误, 
 甚至可检查vim位置列表的所有错误. 这包括下面的例子: 在已被保存的位置列表缓冲区进行搜索.
 默认提示符:
 
@@ -1595,7 +1651,7 @@ SpaceVim 通过 [neomake](https://github.com/neomake/neomake) fly 工具来进�
 
 ### 工程管理
 
-SpaceVim 中的工程通过 vim-projectionisst 和 vim-rooter 进行管理. 当发现一个 `.git` 目录 或
+SpaceVim 中的工程通过 vim-projectionisst 和 vim-rooter 进行管理. 当发现一个 `.git` 目录或
 在文件树中发现 `.projections.json` 文件后 vim-rooter 会自动找到项目的根目录.
 
 工程管理的命令以 `p` 开头:

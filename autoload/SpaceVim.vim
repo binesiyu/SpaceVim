@@ -43,7 +43,7 @@ scriptencoding utf-8
 
 ""
 " Version of SpaceVim , this value can not be changed.
-let g:spacevim_version = '0.9.0-dev'
+let g:spacevim_version = '1.0.0-dev'
 lockvar g:spacevim_version
 
 ""
@@ -481,6 +481,8 @@ let g:spacevim_simple_mode             = 0
 ""
 " The default file manager of SpaceVim. Default is 'vimfiler'.
 let g:spacevim_filemanager             = 'vimfiler'
+
+let g:spacevim_sidebar_direction        = ''
 ""
 " The default plugin manager of SpaceVim.
 " if has patch 7.4.2071, the default value is dein. Otherwise it is neobundle.
@@ -764,6 +766,14 @@ function! SpaceVim#end() abort
     let g:spacevim_windows_leader = ''
     let g:spacevim_windows_smartclose = 0
   endif
+
+  if !g:spacevim_vimcompatible
+    nnoremap <silent><C-x> <C-w>x
+    cnoremap <C-f> <Right>
+    " Navigation in command line
+    cnoremap <C-a> <Home>
+    cnoremap <C-b> <Left>
+  endif
   call SpaceVim#server#connect()
 
   if g:spacevim_enable_neocomplcache
@@ -791,9 +801,9 @@ function! SpaceVim#end() abort
     call SpaceVim#mapping#guide#register_prefix_descriptions('', 'g:leaderGuide_map')
   endif
   if g:spacevim_vim_help_language ==# 'cn'
-    call SpaceVim#layers#load('chinese')
+    let &helplang = 'cn'
   elseif g:spacevim_vim_help_language ==# 'ja'
-    call SpaceVim#layers#load('japanese')
+    let &helplang = 'jp'
   endif
   ""
   " generate tags for SpaceVim

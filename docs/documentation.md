@@ -421,6 +421,7 @@ Some UI indicators can be toggled on and off (toggles start with t and T):
 | `SPC t i`   | toggle indentation guide at point                        |
 | `SPC t n`   | toggle line numbers                                      |
 | `SPC t b`   | toggle background                                        |
+| `SPC t c`   | toggle conceal                                           |
 | `SPC t t`   | open tabs manager                                        |
 | `SPC T ~`   | display ~ in the fringe on empty lines                   |
 | `SPC T F`   | toggle frame fullscreen                                  |
@@ -1741,7 +1742,8 @@ write
 
 ### Errors handling
 
-SpaceVim uses [neomake](https://github.com/neomake/neomake) to gives error feedback on the fly. The checks are only performed at save time by default.
+SpaceVim uses [neomake](https://github.com/neomake/neomake) to gives error feedback on the fly.
+The checks are only performed at save time by default.
 
 Errors management mappings (start with e):
 

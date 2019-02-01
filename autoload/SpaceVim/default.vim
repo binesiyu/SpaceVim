@@ -154,14 +154,18 @@ function! SpaceVim#default#keyBindings() abort
     xnoremap <Leader>y "+y
     xnoremap <Leader>d "+d
     nnoremap <Leader>p "+p
+    let g:_spacevim_mappings.p = ['normal! "+p', 'paste after here']
     nnoremap <Leader>P "+P
+    let g:_spacevim_mappings.P = ['normal! "+P', 'paste before here']
     xnoremap <Leader>p "+p
     xnoremap <Leader>P "+P
   else
     xnoremap <Leader>y "*y
     xnoremap <Leader>d "*d
     nnoremap <Leader>p "*p
+    let g:_spacevim_mappings.p = ['normal! "*p', 'paste after here']
     nnoremap <Leader>P "*P
+    let g:_spacevim_mappings.P = ['normal! "*P', 'paste before here']
     xnoremap <Leader>p "*p
     xnoremap <Leader>P "*P
   endif
@@ -185,6 +189,10 @@ function! SpaceVim#default#keyBindings() abort
         \ 'Toggle recording',
         \ '',
         \ 'Toggle recording mode')
+  call SpaceVim#mapping#def('nnoremap <silent>', '<Leader>qc', ':call setqflist([])<CR>',
+        \ 'Clear quickfix list',
+        \ '',
+        \ 'Clear quickfix')
 
   " Use Ctrl+* to jump between windows
   nnoremap <silent><C-Right> :<C-u>wincmd l<CR>

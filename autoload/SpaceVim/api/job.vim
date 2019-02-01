@@ -197,7 +197,7 @@ function! s:self.stop(id) abort
       call jobstop(a:id)
       call remove(self.jobs, a:id)
     else
-      call self.warn('No job with such id')
+      call self.warn('[job API] Failed to stop job :' . a:id)
     endif
   elseif self.vim_job
     if has_key(self.jobs, a:id)
@@ -218,7 +218,7 @@ function! s:self.send(id, data) abort
         call jobsend(a:id, a:data)
       endif
     else
-      call self.warn('No job with such id')
+      call self.warn('[job API] Failed to send data to job: ' . a:id)
     endif
   elseif self.vim_job
     if has_key(self.jobs, a:id)
@@ -230,7 +230,7 @@ function! s:self.send(id, data) abort
         call ch_sendraw(chanel, join(a:data, "\n"))
       endif
     else
-      call self.warn('No job with such id')
+      call self.warn('[job API] Failed to send data to job: ' . a:id)
     endif
   else
     call self.warn()
@@ -247,7 +247,7 @@ function! s:self.status(id) abort
       return job_status(get(self.jobs, a:id))
     endif
   else
-    call self.warn('No job with such id!')
+      call self.warn('[job API] Failed to get job status: ' . a:id)
   endif
 endfunction
 
@@ -265,12 +265,23 @@ function! s:self.info(id) abort
     if has_key(self.jobs, a:id)
       return job_info(get(self.jobs, a:id))
     else
-      call self.warn('No job with such id!')
+      call self.warn('[job API] Failed to get job info: ' . a:id)
     endif
   else
     call self.warn()
   endif
 endfunction
+
+function! s:self.chanclose(id, type) abort
+  if self.nvim_job
+      call chanclose(a:id, a:type)
+  elseif self.vim_job
+    if has_key(self.jobs, a:id) && a:type ==# 'stdin'
+      call ch_close_in(get(self.jobs, a:id))
+    endif
+  endif
+endfunction
+
 
 function! s:self.debug() abort
   echo join(self._message, "\n")

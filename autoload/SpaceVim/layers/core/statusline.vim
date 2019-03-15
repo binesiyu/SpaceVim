@@ -174,7 +174,7 @@ function! s:date() abort
 endfunction
 
 function! s:whitespace() abort
-  let ln = search('\s\+$', 'n')
+  let ln = search('\s\+$', 'nw')
   if ln != 0
     return ' trailing[' . ln . '] '
   else
@@ -351,6 +351,9 @@ function! SpaceVim#layers#core#statusline#get(...) abort
           \ . '%#SpaceVim_statusline_b#'
           \ . ' vimfiler %#SpaceVim_statusline_b_SpaceVim_statusline_c#'
           \ . s:lsep
+  elseif &filetype ==# 'defx'
+    return '%#SpaceVim_statusline_ia#' . s:winnr(1) . '%#SpaceVim_statusline_ia_SpaceVim_statusline_b#' . s:lsep
+          \ . '%#SpaceVim_statusline_b# defx %#SpaceVim_statusline_b_SpaceVim_statusline_c#' . s:lsep . ' '
   elseif &filetype ==# 'gista-list'
     return '%#SpaceVim_statusline_ia#'
           \ . s:winnr(1) . '%#SpaceVim_statusline_ia_SpaceVim_statusline_b#'
@@ -395,6 +398,9 @@ function! SpaceVim#layers#core#statusline#get(...) abort
             \ . '%#SpaceVim_statusline_c_SpaceVim_statusline_z#' . s:lsep
     endif
     return st
+  elseif &buftype ==# 'nofile' && bufname('%') ==# '__LanguageClient__'
+    return '%#SpaceVim_statusline_a# LanguageClient %#SpaceVim_statusline_a_SpaceVim_statusline_b#' . s:lsep
+          \ . '%#SpaceVim_statusline_b# ' . &filetype . ' %#SpaceVim_statusline_b_SpaceVim_statusline_c#' . s:lsep
   elseif &filetype ==# 'SpaceVimLayerManager'
     return '%#SpaceVim_statusline_a#' . s:winnr(1) . '%#SpaceVim_statusline_a_SpaceVim_statusline_b#' . s:lsep
           \ . '%#SpaceVim_statusline_b# LayerManager %#SpaceVim_statusline_b_SpaceVim_statusline_c#' . s:lsep

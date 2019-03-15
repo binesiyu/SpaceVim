@@ -566,7 +566,14 @@ plugins will be installed.
 <
 
                                                       *g:spacevim_filemanager*
-The default file manager of SpaceVim. Default is 'vimfiler'.
+The default file manager of SpaceVim. Default is 'vimfiler'. you can also use
+nerdtree or defx
+
+                                               *g:spacevim_filetree_direction*
+Config the direction of file tree. Default is 'right'. you can also set to
+'left'.
+
+NOTE: if it is 'left', the tagbar will be move to right.
 
                                          *g:spacevim_plugin_manager_processes*
 Set the max process of SpaceVim plugin manager
@@ -1161,6 +1168,14 @@ MAPPINGS
   normal    SPC l m r     run maven goals
   normal    SPC l m R     run one maven goal
   normal    SPC l m t     run maven test
+
+  Gradle key bindings:
+
+  Mode      Key           Function
+  -------------------------------------------------------------
+  normal    SPC l g b     run gradle clean build
+  normal    SPC l g B     run gradle build
+  normal    SPC l g t     run gradle test
 
   Jump key bindings:
 

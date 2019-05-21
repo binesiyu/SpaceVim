@@ -53,7 +53,7 @@ function! SpaceVim#layers#core#config() abort
   nnoremap <silent> [<Space>  :<c-u>put! =repeat(nr2char(10), v:count1)<cr>
   nnoremap <silent> ]<Space>  :<c-u>put =repeat(nr2char(10), v:count1)<cr>
 
-  "]e or [e move current line ,count can be useed
+  "]e or [e move current line ,count can be used
   nnoremap <silent>[e  :<c-u>execute 'move -1-'. v:count1<cr>
   nnoremap <silent>]e  :<c-u>execute 'move +'. v:count1<cr>
 
@@ -200,7 +200,7 @@ function! SpaceVim#layers#core#config() abort
     " TODO: fix all these command
     call SpaceVim#mapping#space#def('nnoremap', ['f', 't'], 'Defx', 'toggle_file_tree', 1)
     call SpaceVim#mapping#space#def('nnoremap', ['f', 'T'], 'Defx -no-toggle', 'show_file_tree', 1)
-    call SpaceVim#mapping#space#def('nnoremap', ['f', 'o'], "Defx  -no-toggle -search=`expand('%:p')` `getcwd()`", 'open_file_tree', 1)
+    call SpaceVim#mapping#space#def('nnoremap', ['f', 'o'], "Defx  -no-toggle -search=`expand('%:p')` `stridx(expand('%:p'), getcwd()) < 0? expand('%:p:h'): getcwd()`", 'open_file_tree', 1)
     call SpaceVim#mapping#space#def('nnoremap', ['b', 't'], 'Defx -no-toggle', 'show_file_tree_at_buffer_dir', 1)
   endif
   call SpaceVim#mapping#space#def('nnoremap', ['f', 'y'], 'call zvim#util#CopyToClipboard()', 'show-and-copy-buffer-filename', 1)
@@ -399,7 +399,7 @@ function! s:split_string(newline) abort
         break
       endif
     endwhile
-    let l:connector = a:newline ? "\n" : ""
+    let l:connector = a:newline ? "\n" : ''
     let l:save_register_m = @m
     let @m = sep . l:connector . sep
     normal! "mp
@@ -437,12 +437,13 @@ endfunction
 function! s:safe_erase_buffer() abort
   if s:MESSAGE.confirm('Erase content of buffer ' . expand('%:t'))
     normal! ggdG
+  else
+    echo 'canceled!'
   endif
-  redraw!
 endfunction
 
 function! s:ToggleWinDiskManager() abort
-  if bufexists("__windisk__")
+  if bufexists('__windisk__')
     execute 'bd "__windisk__"'
   else
     call SpaceVim#plugins#windisk#open()
@@ -463,6 +464,8 @@ endfunction
 function! s:safe_revert_buffer() abort
   if s:MESSAGE.confirm('Revert buffer form ' . expand('%:p'))
     edit!
+  else
+    echo 'canceled!'
   endif
   redraw!
 endfunction

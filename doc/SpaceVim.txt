@@ -31,9 +31,9 @@ CONTENTS                                                   *SpaceVim-contents*
       11. enable_ycm.............................|SpaceVim-options-enable_ycm|
       12. error_symbol.........................|SpaceVim-options-error_symbol|
       13. guifont...................................|SpaceVim-options-guifont|
-      14. lint_on_the_fly...................|SpaceVim-options-lint_on_the_fly|
-      15. max_column.............................|SpaceVim-options-max_column|
-      16. max_column......................|SpaceVim-options-home_files_number|
+      14. home_files_number...............|SpaceVim-options-home_files_number|
+      15. lint_on_the_fly...................|SpaceVim-options-lint_on_the_fly|
+      16. max_column.............................|SpaceVim-options-max_column|
       17. plugin_bundle_dir...............|SpaceVim-options-plugin_bundle_dir|
       18. plugin_manager_processes.|SpaceVim-options-plugin_manager_processes|
       19. realtime_leader_guide.......|SpaceVim-options-realtime_leader_guide|
@@ -226,6 +226,14 @@ Set the guifont of SpaceVim. Default is empty.
 <
 
 ==============================================================================
+HOME_FILES_NUMBER                         *SpaceVim-options-home_files_number*
+
+Change the list number of files for SpaceVim home. Default is 6.
+>
+  home_files_number = 6
+<
+
+==============================================================================
 LINT_ON_THE_FLY                             *SpaceVim-options-lint_on_the_fly*
 
 Enable/Disable lint on the fly feature of SpaceVim's maker. Default is true.
@@ -239,14 +247,6 @@ MAX_COLUMN                                       *SpaceVim-options-max_column*
 Change the max number of columns for SpaceVim. Default is 120.
 >
   max_column = 120
-<
-
-==============================================================================
-MAX_COLUMN                                *SpaceVim-options-home_files_number*
-
-Change the list number of files for SpaceVim home. Default is 6.
->
-  home_files_number = 6
 <
 
 ==============================================================================
@@ -405,7 +405,7 @@ Set the autocomplete engine of spacevim, the default logic is:
   endif
 <
 
-and you can alse set this option to coc, then coc.nvim will be useed.
+and you can alse set this option to coc, then coc.nvim will be used.
 
                                                    *g:spacevim_enable_neomake*
 SpaceVim default checker is neomake. If you want to use syntastic, use:
@@ -1139,11 +1139,11 @@ MAPPINGS
   normal          SPC l L         list declarations in dir
   normal          SPC l m         format improts
   normal          SPC l M         add import
-  normal          SPC l r         go referrers
+  normal          SPC l x         go referrers
   normal          SPC l s         fill struct
   normal          SPC l t         go test
   normal          SPC l v         freevars
-  normal          SPC l x         go run
+  normal          SPC l r         go run
 <
 
 ==============================================================================
@@ -1271,15 +1271,6 @@ LANG#PHP                                             *SpaceVim-layer-lang-php*
 This layer is for PHP development. It proides code completion, syntax
 checking, and jump to definition.
 
-Requirements:
->
-  PHP 5.3+
-  PCNTL Extension
-  Msgpack 0.5.7+(for NeoVim)Extension: https://github.com/msgpack/msgpack-php
-  JSON(for Vim 7.4+)Extension
-  Composer Project
-<
-
 ==============================================================================
 LANG#PONY                                           *SpaceVim-layer-lang-pony*
 
@@ -1341,18 +1332,24 @@ Requirements:
 >
       rustup component add rust-src
 <
-  2. Install racer:
+  2. Install Rust nightly build
+
 
 >
-      cargo install racer
+      rustup install nightly
 <
-  3. Set the RUST_SRC_PATH variable in your .bashrc:
+  3. Install racer:
+
+>
+      cargo +nightly install racer
+<
+  4. Set the RUST_SRC_PATH variable in your .bashrc:
 
 >
       RUST_SRC_PATH=~/.multirust/toolchains/<change>/lib/rustlib/src/rust/src
       export RUST_SRC_PATH
 <
-  4. Add racer to your path, or set the path with:
+  5. Add racer to your path, or set the path with:
 
 >
       let g:racer_cmd = "/path/to/racer/bin"

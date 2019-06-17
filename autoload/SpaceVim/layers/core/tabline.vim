@@ -1,6 +1,6 @@
 "=============================================================================
 " tabline.vim --- SpaceVim tabline
-" Copyright (c) 2016-2017 Wang Shidong & Contributors
+" Copyright (c) 2016-2019 Wang Shidong & Contributors
 " Author: Wang Shidong < wsdjeg at 163.com >
 " URL: https://spacevim.org
 " License: GPLv3
@@ -51,7 +51,7 @@ function! s:tabname(id) abort
     let id = s:messletters.bubble_num(a:id, g:spacevim_buffer_index_type) . ' '
   endif
   let fn = fnamemodify(bufname(a:id), ':t')
-  if g:spacevim_enable_tabline_filetype_icon
+  if g:spacevim_enable_tabline_ft_icon || get(g:, 'spacevim_enable_tabline_filetype_icon', 0)
     let icon = s:file.fticon(fn)
     if !empty(icon)
       let fn = fn . ' ' . icon
@@ -116,7 +116,7 @@ function! SpaceVim#layers#core#tabline#get() abort
         endif
         call add(stack, buflist[winnr - 1])
         call s:need_show_bfname(stack, buflist[winnr - 1])
-        if g:spacevim_enable_tabline_filetype_icon
+        if g:spacevim_enable_tabline_ft_icon || get(g:, 'spacevim_enable_tabline_filetype_icon', 0)
           let icon = s:file.fticon(name)
           if !empty(icon)
             let name = name . ' ' . icon
@@ -184,7 +184,7 @@ function! SpaceVim#layers#core#tabline#get() abort
       else
         let id = s:messletters.circled_num(index(s:buffers, i) + 1, g:spacevim_buffer_index_type)
       endif
-      if g:spacevim_enable_tabline_filetype_icon
+      if g:spacevim_enable_tabline_ft_icon || get(g:, 'spacevim_enable_tabline_filetype_icon', 0)
         let icon = s:file.fticon(name)
         if !empty(icon)
           let name = name . ' ' . icon
@@ -219,7 +219,7 @@ function! SpaceVim#layers#core#tabline#get() abort
 endfunction
 function! SpaceVim#layers#core#tabline#config() abort
   let [s:lsep , s:rsep] = get(s:separators, g:spacevim_statusline_separator, s:separators['arrow'])
-  let [s:ilsep , s:irsep] = get(s:i_separators, g:spacevim_statusline_inactive_separator, s:separators['arrow'])
+  let [s:ilsep , s:irsep] = get(s:i_separators, g:spacevim_statusline_iseparator, s:separators['arrow'])
   set tabline=%!SpaceVim#layers#core#tabline#get()
   augroup SpaceVim_tabline
     autocmd!

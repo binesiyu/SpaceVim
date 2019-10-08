@@ -9,6 +9,7 @@
 let s:JOB = SpaceVim#api#import('job')
 let s:BUFFER = SpaceVim#api#import('vim#buffer')
 let s:STRING = SpaceVim#api#import('data#string')
+let s:VIM = SpaceVim#api#import('vim')
 
 augroup spacevim_repl
   autocmd!
@@ -38,6 +39,8 @@ endfunction
 function! SpaceVim#plugins#repl#send(type) abort
   if !exists('s:job_id')
     echom('Please start REPL via the key binding "SPC l s i" first.')
+  elseif s:job_id == 0
+    echom('please retart the REPL')
   else
     if a:type ==# 'line'
       call s:JOB.send(s:job_id, [getline('.'), ''])
@@ -94,6 +97,7 @@ if has('nvim') && exists('*chanclose')
       if bufexists(s:bufnr)
         call s:BUFFER.buf_set_lines(s:bufnr, s:lines , s:lines + 1, 0, map(s:_out_data[:-2], "substitute(v:val, '$', '', 'g')"))
         let s:lines += len(s:_out_data) - 1
+        call s:VIM.win_set_cursor(s:winid, [s:VIM.buf_line_count(s:bufnr), 1])
         call s:update_statusline()
       endif
       let s:_out_data = ['']
@@ -101,6 +105,7 @@ if has('nvim') && exists('*chanclose')
       if bufexists(s:bufnr)
         call s:BUFFER.buf_set_lines(s:bufnr, s:lines , s:lines + 1, 0, map(s:_out_data[:-2], "substitute(v:val, '$', '', 'g')"))
         let s:lines += len(s:_out_data) - 1
+        call s:VIM.win_set_cursor(s:winid, [s:VIM.buf_line_count(s:bufnr), 1])
         call s:update_statusline()
       endif
       let s:_out_data = [s:_out_data[-1]]
@@ -111,6 +116,7 @@ else
     if bufexists(s:bufnr)
       call s:BUFFER.buf_set_lines(s:bufnr, s:lines , s:lines + 1, 0, a:data)
       let s:lines += len(a:data)
+      call s:VIM.win_set_cursor(s:winid, [s:VIM.buf_line_count(s:bufnr), 1])
       call s:update_statusline()
     endif
   endfunction
@@ -130,6 +136,7 @@ function! s:on_exit(job_id, data, event) abort
     call s:BUFFER.buf_set_lines(s:bufnr, s:lines , s:lines + 1, 0, done)
   endif
   call s:update_statusline()
+  let s:job_id = 0
 endfunction
 
 function! s:update_statusline() abort
@@ -167,6 +174,7 @@ function! SpaceVim#plugins#repl#status() abort
 endfunction
 
 let s:bufnr = 0
+let s:winid = -1
 function! s:open_windows() abort
   if s:bufnr != 0 && bufexists(s:bufnr)
     exe 'bd ' . s:bufnr
@@ -178,5 +186,6 @@ function! s:open_windows() abort
   set filetype=SpaceVimREPL
   nnoremap <silent><buffer> q :call <SID>close()<cr>
   let s:bufnr = bufnr('%')
+  let s:winid = win_getid(winnr())
   wincmd p
 endfunction

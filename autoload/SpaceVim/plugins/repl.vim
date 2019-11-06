@@ -8,8 +8,8 @@
 
 let s:JOB = SpaceVim#api#import('job')
 let s:BUFFER = SpaceVim#api#import('vim#buffer')
+let s:WINDOW = SpaceVim#api#import('vim#window')
 let s:STRING = SpaceVim#api#import('data#string')
-let s:VIM = SpaceVim#api#import('vim')
 
 augroup spacevim_repl
   autocmd!
@@ -73,6 +73,7 @@ function! s:start(exe) abort
   let s:start_time = reltime()
   call s:open_windows()
   call s:BUFFER.buf_set_lines(s:bufnr, s:lines , s:lines + 3, 0, ['[REPL executable] ' . string(a:exe), '', repeat('-', 20)])
+  call s:WINDOW.set_cursor(s:winid, [s:BUFFER.line_count(s:bufnr), 0])
   let s:lines += 3
   let s:_out_data = ['']
   let s:_current_line = ''
@@ -97,7 +98,9 @@ if has('nvim') && exists('*chanclose')
       if bufexists(s:bufnr)
         call s:BUFFER.buf_set_lines(s:bufnr, s:lines , s:lines + 1, 0, map(s:_out_data[:-2], "substitute(v:val, '$', '', 'g')"))
         let s:lines += len(s:_out_data) - 1
-        call s:VIM.win_set_cursor(s:winid, [s:VIM.buf_line_count(s:bufnr), 1])
+        if s:WINDOW.get_cursor(s:winid)[0] == s:BUFFER.line_count(s:bufnr) - len(s:_out_data) + 1
+          call s:WINDOW.set_cursor(s:winid, [s:BUFFER.line_count(s:bufnr), 0])
+        endi
         call s:update_statusline()
       endif
       let s:_out_data = ['']
@@ -105,7 +108,9 @@ if has('nvim') && exists('*chanclose')
       if bufexists(s:bufnr)
         call s:BUFFER.buf_set_lines(s:bufnr, s:lines , s:lines + 1, 0, map(s:_out_data[:-2], "substitute(v:val, '$', '', 'g')"))
         let s:lines += len(s:_out_data) - 1
-        call s:VIM.win_set_cursor(s:winid, [s:VIM.buf_line_count(s:bufnr), 1])
+        if s:WINDOW.get_cursor(s:winid)[0] == s:BUFFER.line_count(s:bufnr) - len(s:_out_data) + 1
+          call s:WINDOW.set_cursor(s:winid, [s:BUFFER.line_count(s:bufnr), 0])
+        endi
         call s:update_statusline()
       endif
       let s:_out_data = [s:_out_data[-1]]
@@ -116,7 +121,9 @@ else
     if bufexists(s:bufnr)
       call s:BUFFER.buf_set_lines(s:bufnr, s:lines , s:lines + 1, 0, a:data)
       let s:lines += len(a:data)
-      call s:VIM.win_set_cursor(s:winid, [s:VIM.buf_line_count(s:bufnr), 1])
+      if s:WINDOW.get_cursor(s:winid)[0] == s:BUFFER.line_count(s:bufnr) - len(a:data)
+        call s:WINDOW.set_cursor(s:winid, [s:BUFFER.line_count(s:bufnr), 0])
+      endi
       call s:update_statusline()
     endif
   endfunction

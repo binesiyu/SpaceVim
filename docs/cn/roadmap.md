@@ -4,14 +4,14 @@ description: "SpaceVim 设计蓝图和里程碑，这决定了 SpaceVim 的开�
 lang: zh
 ---
 
-# 设计蓝图
+# [主页](../) >> 设计蓝图
 
 SpaceVim 的设计蓝图和[里程碑](https://github.com/SpaceVim/SpaceVim/milestones)决定了该项目的开发方向以及所有特性实现的优先顺序。
 
 <!-- vim-markdown-toc GFM -->
 
 - [下一个版本](#下一个版本)
-  - [v1.1.0](#v110)
+  - [v1.4.0](#v140)
 - [版本说明](#版本说明)
 - [Completed](#completed)
   - [v0.1.0](#v010)
@@ -25,12 +25,15 @@ SpaceVim 的设计蓝图和[里程碑](https://github.com/SpaceVim/SpaceVim/mile
   - [v0.8.0](#v080)
   - [v0.9.0](#v090)
   - [v1.0.0](#v100)
+  - [v1.1.0](#v110)
+  - [v1.2.0](#v120)
+  - [v1.3.0](#v130)
 
 <!-- vim-markdown-toc -->
 
 ## 下一个版本
 
-### [v1.1.0](https://github.com/SpaceVim/SpaceVim/milestone/14)
+### [v1.4.0](https://github.com/SpaceVim/SpaceVim/milestone/17)
 
 ## 版本说明
 
@@ -129,5 +132,17 @@ release note: [v0.9.0](http://spacevim.org/SpaceVim-release-v0.9.0/)
 First stable release of SpaceVim
 
 release note: [v1.0.0](http://spacevim.org/SpaceVim-release-v1.0.0/)
+
+### [v1.1.0](https://github.com/SpaceVim/SpaceVim/milestone/14)
+
+release note: [v1.1.0](http://spacevim.org/SpaceVim-release-v1.1.0/)
+
+### [v1.2.0](https://github.com/SpaceVim/SpaceVim/milestone/15)
+
+release note: [v1.2.0](http://spacevim.org/SpaceVim-release-v1.2.0/)
+
+### [v1.3.0](https://github.com/SpaceVim/SpaceVim/milestone/16)
+
+release note: [v1.3.0](http://spacevim.org/SpaceVim-release-v1.3.0/)
 
 <!-- SpaceVim roadmap completed items end -->

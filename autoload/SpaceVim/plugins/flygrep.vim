@@ -477,7 +477,7 @@ function! s:open_item() abort
     endif
     let s:preview_able = 0
     noautocmd q
-    exe 'e ' . filename
+    exe 'silent e ' . filename
     call s:update_history()
     call cursor(linenr, colum)
     noautocmd normal! :
@@ -501,7 +501,7 @@ function! s:open_item_vertically() abort
     endif
     let s:preview_able = 0
     noautocmd q
-    exe 'vsplit ' . filename
+    exe 'silent vsplit ' . filename
     call s:update_history()
     call cursor(linenr, colum)
     noautocmd normal! :
@@ -525,7 +525,7 @@ function! s:open_item_horizontally() abort
     endif
     let s:preview_able = 0
     noautocmd q
-    exe 'split ' . filename
+    exe 'silent split ' . filename
     call s:update_history()
     call cursor(linenr, colum)
     noautocmd normal! :
@@ -704,6 +704,8 @@ if has('nvim')
         \ }
         \ )
 endif
+
+let s:MPT._keys.close = ["\<Esc>", "\<C-c>"]
 " }}}
 
 " Public API: SpaceVim#plugins#flygrep#open(argv) {{{

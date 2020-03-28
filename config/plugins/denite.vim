@@ -17,6 +17,10 @@ let s:denite_options = {
       \ 'prompt' : g:spacevim_commandline_prompt,
       \ }}
 
+if has('nvim')
+  call denite#custom#option('default', 'split', 'floating')
+end
+
 function! s:profile(opts) abort
   for fname in keys(a:opts)
     for dopt in keys(a:opts[fname])

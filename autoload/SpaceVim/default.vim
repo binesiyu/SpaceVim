@@ -23,11 +23,11 @@ function! SpaceVim#default#options() abort
     set guioptions-=e " Hide tab
     if s:SYSTEM.isWindows
       " please install the font in 'Dotfiles\font'
-      set guifont=DejaVu_Sans_Mono_for_Powerline:h11:cANSI:qDRAFT
+      " set guifont=DejaVu_Sans_Mono_for_Powerline:h11:cANSI:qDRAFT
     elseif s:SYSTEM.isOSX
-      set guifont=DejaVu\ Sans\ Mono\ for\ Powerline:h11
+      " set guifont=DejaVu\ Sans\ Mono\ for\ Powerline:h11
     else
-      set guifont=DejaVu\ Sans\ Mono\ for\ Powerline\ 11
+      " set guifont=DejaVu\ Sans\ Mono\ for\ Powerline\ 11
     endif
   endif
 

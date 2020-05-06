@@ -10,7 +10,7 @@ description: "SpaceVim is a community-driven vim distribution that seeks to prov
 [![Version](https://img.shields.io/badge/version-1.5.0--dev-8700FF.svg)](https://github.com/SpaceVim/SpaceVim/releases)
 [![GPLv3 License](https://img.shields.io/badge/license-GPLv3-blue.svg)](https://github.com/SpaceVim/SpaceVim/blob/master/LICENSE)
 
-![welcome-page](https://user-images.githubusercontent.com/13142418/78467954-f4fe2800-7744-11ea-8b47-0614ddc5d51b.png)
+![welcome-page](https://user-images.githubusercontent.com/13142418/80494420-3925c680-8999-11ea-9652-21e1e5564148.png)
 
 # SpaceVim - Modern Vim distribution
 
@@ -30,7 +30,7 @@ appreciation while providing us motivation to continue working on this project.
 - [Documentation](documentation/): the primary official document of SpaceVim
 - [Available layers](layers/): a list of available layers which can be used in SpaceVim
 
-The last release is v1.2.0, check out [following-HEAD](https://github.com/SpaceVim/SpaceVim/wiki/Following-HEAD) page for what happened since last release.
+The last release is v1.4.0, check out [following-HEAD](https://github.com/SpaceVim/SpaceVim/wiki/Following-HEAD) page for what happened since last release.
 
 ## New features
 

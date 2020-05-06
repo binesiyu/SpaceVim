@@ -33,7 +33,7 @@ description: "General documentation about how to using SpaceVim, including the q
 - [General usage](#general-usage)
   - [Native functions](#native-functions)
   - [Visual mode key bindings](#visual-mode-key-bindings)
-  - [Command line mode key bindings](#command-line-mode-key-bidnings)
+  - [Command line mode key bindings](#command-line-mode-key-bindings)
   - [Mappings guide](#mappings-guide)
   - [Editing](#editing)
     - [Text manipulation commands](#text-manipulation-commands)
@@ -297,21 +297,37 @@ endfunction
 
 The different key bindings between SpaceVim and origin vim are shown as below.
 
-- The `s` key does replace cursor char, but in SpaceVim it is the `Window` key bindings specific leader key by default (which can be set on another key binding in dotfile). If you still prefer the origin function of `s`, you can use an empty string to disable this feature.
+- The `s` key does replace cursor char, but in SpaceVim it is the `Window` key
+  bindings specific leader in **Normal** mode. This leader change be changed via
+  `windows_leader` option which use `s` as default variable. If you still prefer the origin function of `s`,
+  you can use an empty string to disable this feature.
 
-The option is `windows_leader`, default value is `s`.
+  ```toml
+  [options]
+      windows_leader = ''
+  ```
 
 - The `,` key does repeat last `f`, `F`, `t` and `T` in vim, but in SpaceVim it is the language specified Leader key.
+  To disable this feature, set the option `enable_language_specific_leader` to `false`.
 
-The option is `enable_language_specific_leader`, default value is `1`.
+  ```toml
+  [options]
+      enable_language_specific_leader = false
+  ```
 
-- The `q` key does recording, but in SpaceVim it is used for closing window smart. If you still prefer the origin function of `q`, you can use an empty string to disable this feature.
+- The `q` key does recording, but in SpaceVim it is used to close current window.
+  The option for setting key binding to close current window is `windows_smartclose`,
+  and the default valuable is `q`.
+  If you prefer to use the origin function of `q`, you can use an empty string to disable this feature.
 
-The option is `windows_smartclose`, default value is `q`.
+  ```toml
+  [options]
+      windows_smartclose = ''
+  ```
 
 - The `Ctrl-a` binding on the command line can auto-complete variable names, but in SpaceVim it moves to the cursor to the beginning of the command line.
-- `Ctrl-b` in command line mode is mapped to `<Left>`, which will move cursor to the left.
-- `Ctrl-f` in command line mode is mapped to `<Right>`, which will move cursor to the right.
+- The `Ctrl-b` binding on the command line is mapped to `<Left>`, which will move cursor to the left.
+- The `Ctrl-f` binding on the command line is mapped to `<Right>`, which will move cursor to the right.
 
 SpaceVim provides a vimcompatible mode, in vimcompatible mode, all the differences above will disappear.
 You can enable the vimcompatible mode via adding `vimcompatible = true` to `[options]` section.
@@ -321,7 +337,7 @@ For example, in order to disable language specific leader, you may add the follo
 
 ```toml
 [options]
-enable_language_specific_leader = false
+    enable_language_specific_leader = false
 ```
 
 [Send a PR](http://spacevim.org/development/) to add the differences you found in this section.
@@ -506,6 +522,13 @@ Search index shows the number of occurrence when performing a search via `/` or 
 
 ![search status](https://cloud.githubusercontent.com/assets/13142418/26313080/578cc68c-3f3c-11e7-9259-a27419d49572.png)
 
+Search index is provided by `incsearch` layer, to enable this layer:
+
+```toml
+[layers]
+    name = "incsearch"
+```
+
 **Battery status integration:**
 
 _acpi_ displays the percentage of total charge of the battery as well as the time remaining to charge or discharge completely the battery.
@@ -681,7 +704,7 @@ VCS integration is supported, there will be a column status, this feature may ma
 To enable this feature, add `enable_vimfiler_gitstatus = true` to your custom configure.
 Here is a picture for this feature:
 
-![file-tree](https://user-images.githubusercontent.com/13142418/26881817-279225b2-4bcb-11e7-8872-7e4bd3d1c84e.png)
+![file-tree](https://user-images.githubusercontent.com/13142418/80496111-5065b380-899b-11ea-95c7-02af4d304aaf.png)
 
 There is also an option to config the direction of file tree, by default it is right. To move the file tree to the left,
 you can use `filetree_direction` option:
@@ -931,6 +954,8 @@ Text insertion commands (start with `i`):
 | `SPC i U 1`  | insert UUIDv1 (use universal argument to insert with CID format)      |
 | `SPC i U 4`  | insert UUIDv4 (use universal argument to insert with CID format)      |
 | `SPC i U U`  | insert UUIDv4 (use universal argument to insert with CID format)      |
+
+**Tips:** You can specify number of password characters using prefix argument, (i.e. `10 SPC i p 1` will generate 10 characters of simple password)
 
 #### Increase/Decrease numbers
 
@@ -1684,6 +1709,7 @@ here is an example of `.project_alt.json`:
   }
 }
 ```
+
 ### Bookmarks management
 
 Bookmarks manager is included in `tools` layer, to use following key bindings, you need to enable
@@ -1732,15 +1758,14 @@ then pressing `SPC p t r` shows the following list:
 
 ![task-auto-detection](https://user-images.githubusercontent.com/13142418/75089003-471d2c80-558f-11ea-8aea-cbf7417191d9.png)
 
-
 #### Task provider
 
 Some tasks can be automatically detected by task provider. For example,
 a Task Provider could check if there is a specific build file, such as `package.json`,
-and create npm tasks. 
+and create npm tasks.
 
 To build a task provider, you need to use Bootstrap function. The task provider should be a vim function.
-and return a task object. 
+and return a task object.
 
 here is an example for building task provider.
 
@@ -1989,7 +2014,6 @@ Custom sign symbol:
 | `<Leader> q n` | jump to next item in quickfix list     |
 | `<Leader> q p` | jump to previous item in quickfix list |
 
-
 ### EditorConfig
 
 SpaceVim has supported [EditorConfig](http://editorconfig.org/), a configuration file to “define and maintain consistent coding styles between different editors and IDEs.”
@@ -2011,8 +2035,6 @@ export PATH=$PATH:$HOME/.SpaceVim/bin
 Use `svc` to open a file in the existing Vim server, or use `nsvc` to open a file in the existing Neovim server.
 
 ![server-and-client](https://user-images.githubusercontent.com/13142418/32554968-7164fe9c-c4d6-11e7-95f7-f6a6ea75e05b.gif)
-
-
 
 <!-- SpaceVim Achievements start -->
 

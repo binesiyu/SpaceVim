@@ -137,6 +137,25 @@ let g:spacevim_home_files_number        = 6
 let g:spacevim_enable_guicolors = 0
 
 ""
+" @section escape_key_binding, options-escape_key_binding
+" @parentsection options
+" Set the key binding for switch to normal mode in insert mode.
+" Default is `jk`, to disable this key binding, set this option to empty
+" string.
+" >
+"   escape_key_binding = 'jk'
+" <
+
+""
+" Set the key binding for switch to normal mode in insert mode.
+" Default is `jk`, to disable this key binding, set this option to empty
+" string.
+" >
+"   let g:spacevim_escape_key_binding = 'jk'
+" <
+let g:spacevim_escape_key_binding = 'jk'
+
+""
 " @section enable_googlesuggest, options-enable_googlesuggest
 " @parentsection options
 " Enable/Disable Google suggestions for neocomplete. Default is false.
@@ -999,6 +1018,9 @@ let g:spacevim_project_rooter_patterns = ['.git/', '_darcs/', '.hg/', '.bzr/', '
 ""
 " Enable/Disable changing directory automatically. Enabled by default.
 let g:spacevim_project_rooter_automatically = 1
+""
+" Enable/Disable finding outermost directory for project root detection.
+let g:spacevim_project_rooter_outermost = 1
 
 ""
 " Config the command line prompt for flygrep and denite etc.
@@ -1195,6 +1217,11 @@ function! SpaceVim#end() abort
     cnoremap <C-b> <Left>
     " @bug_vim with <silent> command line can not be cleared
     cnoremap <expr> <C-k> repeat('<Delete>', strchars(getcmdline()) - getcmdpos() + 1)
+
+    "Use escape_key_binding switch to normal mode
+    if !empty(g:spacevim_escape_key_binding)
+      exe printf('inoremap %s <esc>', g:spacevim_escape_key_binding)
+    endif
   endif
   call SpaceVim#server#connect()
 
@@ -1370,6 +1397,9 @@ function! SpaceVim#welcome() abort
       wincmd p
     elseif exists(':Defx') == 2
       Defx
+      wincmd p
+    elseif exists(':NERDTree') == 2
+      NERDTree
       wincmd p
     endif
   endif

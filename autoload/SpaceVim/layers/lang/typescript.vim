@@ -1,6 +1,6 @@
 "GetUserUserContext=============================================================================
 " typescript.vim --- lang#typescript layer for SpaceVim
-" Copyright (c) 2016-2019 Shidong Wang & Contributors
+" Copyright (c) 2016-2020 Wang Shidong & Contributors
 " Author: Shidong Wang < wsdjeg at 163.com >
 " URL: https://spacevim.org
 " License: GPLv3
@@ -26,6 +26,7 @@
 function! SpaceVim#layers#lang#typescript#plugins() abort
   let plugins = []
   call add(plugins, ['leafgarland/typescript-vim'])
+  call add(plugins, ['peitalin/vim-jsx-typescript'])
   call add(plugins, ['heavenshell/vim-jsdoc', { 'on_cmd': 'JsDoc' }])
   if !SpaceVim#layers#lsp#check_filetype('typescript')
     if has('nvim')

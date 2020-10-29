@@ -1,6 +1,6 @@
 "=============================================================================
 " floating.vim --- vim floating api
-" Copyright (c) 2016-2019 Wang Shidong & Contributors
+" Copyright (c) 2016-2020 Wang Shidong & Contributors
 " Author: Wang Shidong < wsdjeg@outlook.com >
 " URL: https://spacevim.org
 " License: GPLv3
@@ -77,6 +77,7 @@ function! s:self.open_win(buffer, focuce, options) abort
   let row = get(a:options, 'row', 1)
   let width = get(a:options, 'width', 1)
   let height = get(a:options, 'height', 1) 
+  let highlight = get(a:options, 'highlight', 'Normal') 
   let relative = get(a:options, 'relative', 'editor')
   if relative ==# 'win'
   elseif relative ==# 'cursor'
@@ -88,6 +89,8 @@ function! s:self.open_win(buffer, focuce, options) abort
           \ 'minheight' : height,
           \ 'maxwidth' : width,
           \ 'minwidth' : width,
+          \ 'highlight' : highlight,
+          \ 'scrollbar' : 0,
           \ }
   endif
   return popup_create(a:buffer, opt)
@@ -98,6 +101,7 @@ function! s:self.win_config(winid, options) abort
   let row = get(a:options, 'row', 1)
   let width = get(a:options, 'width', 1)
   let height = get(a:options, 'height', 1) 
+  let highlight = get(a:options, 'highlight', '') 
   let relative = get(a:options, 'relative', 'editor')
   if relative ==# 'win'
   elseif relative ==# 'cursor'
@@ -109,6 +113,8 @@ function! s:self.win_config(winid, options) abort
           \ 'minheight' : height,
           \ 'maxwidth' : width,
           \ 'minwidth' : width,
+          \ 'highlight' : highlight,
+          \ 'scrollbar' : 0,
           \ }
   endif
   return popup_setoptions(a:winid, opt)

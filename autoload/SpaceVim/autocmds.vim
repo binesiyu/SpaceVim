@@ -65,6 +65,9 @@ function! SpaceVim#autocmds#init() abort
     autocmd BufEnter * let b:_spacevim_project_name = get(g:, '_spacevim_project_name', '')
     autocmd SessionLoadPost * let g:_spacevim_session_loaded = 1
     autocmd VimLeavePre * call SpaceVim#plugins#manager#terminal()
+    if has('nvim')
+      autocmd CursorHold,FocusGained,FocusLost * rshada|wshada
+    endif
   augroup END
 endfunction
 
@@ -171,11 +174,24 @@ function! SpaceVim#autocmds#VimEnter() abort
   if !empty(get(g:, '_spacevim_bootstrap_after', ''))
     try
       call call(g:_spacevim_bootstrap_after, [])
+      let g:_spacevim_bootstrap_after_success = 1
     catch
       call SpaceVim#logger#error('failed to call bootstrap_after function: ' . g:_spacevim_bootstrap_after)
       call SpaceVim#logger#error('       exception: ' . v:exception)
       call SpaceVim#logger#error('       throwpoint: ' . v:throwpoint)
+      let g:_spacevim_bootstrap_after_success = 0
     endtry
+  endif
+
+  if !get(g:, '_spacevim_bootstrap_before_success', 1)
+    echohl Error
+    echom 'bootstrap_before function failed to execute. Check `SPC h L` for errors.'
+    echohl None
+  endif
+  if !get(g:, '_spacevim_bootstrap_after_success', 1)
+    echohl Error
+    echom 'bootstrap_after function failed to execute. Check `SPC h L` for errors.'
+    echohl None
   endif
 endfunction
 

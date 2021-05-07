@@ -20,7 +20,7 @@ This is a list of programming languages supported in SpaceVim:
 | AutoHotkey        | [lang#autohotkey](https://spacevim.org/layers/lang/autohotkey/)     |                                                                                                               |
 | Bash, Fish, zsh   | [lang#sh](https://spacevim.org/layers/lang/sh/)                     |                                                                                                               |
 | C#                | [lang#csharp](https://spacevim.org/layers/lang/csharp/)             |                                                                                                               |
-| C/C++             | [lang#c](https://spacevim.org/layers/lang/c/)                       |                                                                                                               |
+| C/C++/Objective-C | [lang#c](https://spacevim.org/layers/lang/c/)                       |                                                                                                               |
 | Clojure           | [lang#clojure](https://spacevim.org/layers/lang/clojure/)           |                                                                                                               |
 | CoffeeScript      | [lang#coffeescript](https://spacevim.org/layers/lang/coffeescript/) |                                                                                                               |
 | Crystal           | [lang#crystal](https://spacevim.org/layers/lang/crystal/)           |                                                                                                               |
@@ -74,6 +74,8 @@ This is a list of programming languages supported in SpaceVim:
 | Red               | [lang#red](https://spacevim.org/layers/lang/red/)                   |                                                                                                               |
 | Ring              | [lang#ring](https://spacevim.org/layers/lang/ring)                  |                                                                                                               |
 | Ruby              | [lang#ruby](https://spacevim.org/layers/lang/ruby/)                 |                                                                                                               |
+| Reason            | [lang#ruby](https://spacevim.org/layers/lang/reason/)               |                                                                                                               |
+| ReScript          | [lang#ruby](https://spacevim.org/layers/lang/rescript/)             |                                                                                                               |
 | Rust              | [lang#rust](https://spacevim.org/layers/lang/rust/)                 |                                                                                                               |
 | Scala             | [lang#scala](https://spacevim.org/layers/lang/scala/)               |                                                                                                               |
 | Scheme            | [lang#scheme](https://spacevim.org/layers/lang/scheme/)             |                                                                                                               |
@@ -222,7 +224,6 @@ Before adding these languages, we need to know:
 | NXT-G                         |           |        |
 | Oberon                        |           |        |
 | Object Rexx                   |           |        |
-| Objective-C                   |           |        |
 | Occam                         |           |        |
 | OpenCL                        |           |        |
 | OpenEdge ABL                  |           |        |

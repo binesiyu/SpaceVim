@@ -174,6 +174,18 @@ let g:spacevim_enable_guicolors = 0
 let g:spacevim_escape_key_binding = 'jk'
 
 ""
+" @section file_searching_tools, options-file_searching_tools
+" @parentsection options
+" Set the default file searching tool used by `SPC f /`, by default it is `[]`.
+" The first item in this list is the name of the tool, the second one is the
+" default command. for example:
+" >
+"   file_searching_tools = ['find', 'find -not -iwholename "*.git*" ']
+" <
+
+let g:spacevim_file_searching_tools = []
+
+""
 " @section enable_googlesuggest, options-enable_googlesuggest
 " @parentsection options
 " Enable/Disable Google suggestions for neocomplete. Default is false.
@@ -279,7 +291,9 @@ let g:spacevim_realtime_leader_guide   = 1
 "   let g:spacevim_enable_key_frequency = 1
 " <
 let g:spacevim_enable_key_frequency = 0
-if (has('python3') && SpaceVim#util#haspy3lib('neovim')) &&
+if (has('python3') 
+      \ && (SpaceVim#util#haspy3lib('neovim')
+      \ || SpaceVim#util#haspy3lib('pynvim'))) &&
       \ (has('nvim') || (has('patch-8.0.0027')))
 
   ""
@@ -320,7 +334,9 @@ if (has('python3') && SpaceVim#util#haspy3lib('neovim')) &&
   "
   " and you can alse set this option to coc, then coc.nvim will be used.
   let g:spacevim_autocomplete_method = 'deoplete'
-elseif has('lua')
+
+  " neocomplete does not work with Vim 8.2.1066
+elseif has('lua') && !has('patch-8.2.1066')
   let g:spacevim_autocomplete_method = 'neocomplete'
 elseif has('python') && ((has('job') && has('timers') && has('lambda')) || has('nvim'))
   let g:spacevim_autocomplete_method = 'completor'
@@ -797,7 +813,7 @@ let g:spacevim_sidebar_direction        = ''
 " The default plugin manager of SpaceVim.
 " if has patch 7.4.2071, the default value is dein. Otherwise it is neobundle.
 " Options are dein, neobundle, or vim-plug.
-if has('patch-7.4.1689')
+if has('patch-7.4.2071')
   let g:spacevim_plugin_manager          = 'dein'
 else
   let g:spacevim_plugin_manager          = 'neobundle'
@@ -1359,9 +1375,12 @@ function! SpaceVim#end() abort
   " tab options:
   set smarttab
   let &expandtab = g:spacevim_expand_tab
-  let &tabstop = g:spacevim_default_indent
-  let &softtabstop = g:spacevim_default_indent
-  let &shiftwidth = g:spacevim_default_indent
+
+  if g:spacevim_default_indent > 0
+    let &tabstop = g:spacevim_default_indent
+    let &softtabstop = g:spacevim_default_indent
+    let &shiftwidth = g:spacevim_default_indent
+  endif
 
   let g:unite_source_menu_menus =
         \ get(g:,'unite_source_menu_menus',{})
@@ -1426,30 +1445,21 @@ function! SpaceVim#end() abort
 
   call SpaceVim#autocmds#init()
 
-  if has('nvim')
-    if !has('nvim-0.2.0')
-      let $NVIM_TUI_ENABLE_CURSOR_SHAPE = g:spacevim_terminal_cursor_shape
-    else
-      if g:spacevim_terminal_cursor_shape == 0
-        " prevent nvim from changing the cursor shape
-        set guicursor=
-      elseif g:spacevim_terminal_cursor_shape == 1
-        " enable non-blinking mode-sensitive cursor
-        set guicursor=n-v-c:block-blinkon0,i-ci-ve:ver25-blinkon0,r-cr:hor20,o:hor50
-      elseif g:spacevim_terminal_cursor_shape == 2
-        " enable blinking mode-sensitive cursor
-        set guicursor=n-v-c:block-blinkon10,i-ci-ve:ver25-blinkon10,r-cr:hor20,o:hor50
-      endif
+  if !has('nvim-0.2.0') && !has('nvim')
+    " In old version of neovim, &guicursor do not support cursor shape
+    " setting.
+    let $NVIM_TUI_ENABLE_CURSOR_SHAPE = g:spacevim_terminal_cursor_shape
+  else
+    if g:spacevim_terminal_cursor_shape == 0
+      " prevent nvim from changing the cursor shape
+      set guicursor=
+    elseif g:spacevim_terminal_cursor_shape == 1
+      " enable non-blinking mode-sensitive cursor
+      set guicursor=n-v-c:block-blinkon0,i-ci-ve:ver25-blinkon0,r-cr:hor20,o:hor50
+    elseif g:spacevim_terminal_cursor_shape == 2
+      " enable blinking mode-sensitive cursor
+      set guicursor=n-v-c:block-blinkon10,i-ci-ve:ver25-blinkon10,r-cr:hor20,o:hor50
     endif
-
-    "silent! let &t_SI = "\<Esc>]50;CursorShape=1\x7"
-    "silent! let &t_SR = "\<Esc>]50;CursorShape=2\x7"
-    "silent! let &t_EI = "\<Esc>]50;CursorShape=0\x7"
-
-    augroup nvimrc_aucmd
-      autocmd!
-      autocmd CursorHold,FocusGained,FocusLost * rshada|wshada
-    augroup END
   endif
   filetype plugin indent on
   syntax on

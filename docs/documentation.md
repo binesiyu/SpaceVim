@@ -84,6 +84,7 @@ description: "General documentation about how to using SpaceVim, including the q
   - [Bookmarks management](#bookmarks-management)
   - [Tasks](#tasks)
     - [Custom tasks](#custom-tasks)
+    - [Task Problems Matcher](#task-problems-matcher)
     - [Task auto-detection](#task-auto-detection)
     - [Task provider](#task-provider)
   - [Replace text with iedit](#replace-text-with-iedit)
@@ -227,7 +228,13 @@ plugin names after `:SPUpdate`.
 ### Reinstall plugins
 
 When a plugin is failed to update or is broken, Use `:SPReinstall`
-command to reinstall this plugin.
+command to reinstall this plugin. The plugins name can be complete via key binding `<Tab>`.
+
+For example:
+
+```
+:SPReinstall echodoc.vim
+```
 
 ### Get SpaceVim log
 
@@ -286,7 +293,6 @@ You can also use the url of the repository, for example:
     repo = "https://gitlab.com/code-stats/code-stats-vim.git"
     merged = false
 ```
-
 
 `on_cmd` option means this plugin will be loaded only when the following commands are called.
 
@@ -484,7 +490,7 @@ The default colorscheme of SpaceVim is [gruvbox](https://github.com/morhetz/gruv
 There are two variants of this colorscheme, a dark one and a light one. Some aspects
 of these colorscheme can be customized in the custom configuration file, read `:h gruvbox`.
 
-It is possible to define your default themes in your `~/.SpaceVim.d/init.toml` with
+It is possible to change the colorscheme in `~/.SpaceVim.d/init.toml` with
 the variable colorschemes. For instance, to specify `desert`:
 
 ```toml
@@ -493,10 +499,10 @@ the variable colorschemes. For instance, to specify `desert`:
     colorscheme_bg = "dark"
 ```
 
-| Mappings  | Descriptions                                                   |
-| --------- | -------------------------------------------------------------- |
-| `SPC T n` | switch to next random colorscheme listed in colorscheme layer. |
-| `SPC T s` | select a theme using a unite buffer.                           |
+| Mappings  | Descriptions                                                                             |
+| --------- | ---------------------------------------------------------------------------------------- |
+| `SPC T n` | switch to next random colorscheme listed in [colorscheme layer](../layers/colorscheme/). |
+| `SPC T s` | select a theme using a [fuzzy finder](#fuzzy-finder).                                                     |
 
 All the included colorschemes can be found in [colorscheme layer](../layers/colorscheme/).
 
@@ -528,25 +534,26 @@ Also note that changing this value has no effect if you are running Vim/Neovim i
 
 Some UI indicators can be toggled on and off (toggles start with t and T):
 
-| Key Bindings | Descriptions                                             |
-| ------------ | -------------------------------------------------------- |
-| `SPC t 8`    | highlight any character past the 80th column             |
-| `SPC t f`    | display the fill column (by default `max_column` is 120) |
-| `SPC t h h`  | toggle highlight of the current line                     |
-| `SPC t h i`  | toggle highlight indentation levels (TODO)               |
-| `SPC t h c`  | toggle highlight indentation current column              |
-| `SPC t h s`  | toggle syntax highlighting                               |
-| `SPC t i`    | toggle indentation guide at point                        |
-| `SPC t n`    | toggle line numbers                                      |
-| `SPC t b`    | toggle background                                        |
-| `SPC t c`    | toggle conceal                                           |
-| `SPC t p`    | toggle paste mode                                        |
-| `SPC t t`    | open tabs manager                                        |
-| `SPC T ~`    | display ~ in the fringe on empty lines                   |
-| `SPC T F`    | toggle frame fullscreen                                  |
-| `SPC T f`    | toggle display of the fringe                             |
-| `SPC T m`    | toggle menu bar                                          |
-| `SPC T t`    | toggle tool bar                                          |
+| Key Bindings | Descriptions                                                               |
+| ------------ | -------------------------------------------------------------------------- |
+| `SPC t 8`    | highlight any character past the 80th column                               |
+| `SPC t a`    | toggle autocomplete (only available with `autocomplete_method = deoplete`) |
+| `SPC t f`    | display the fill column (by default `max_column` is 120)                   |
+| `SPC t h h`  | toggle highlight of the current line                                       |
+| `SPC t h i`  | toggle highlight indentation levels                                        |
+| `SPC t h c`  | toggle highlight indentation current column                                |
+| `SPC t h s`  | toggle syntax highlighting                                                 |
+| `SPC t i`    | toggle indentation guide at point                                          |
+| `SPC t n`    | toggle line numbers                                                        |
+| `SPC t b`    | toggle background                                                          |
+| `SPC t c`    | toggle conceal                                                             |
+| `SPC t p`    | toggle paste mode                                                          |
+| `SPC t t`    | open tabs manager                                                          |
+| `SPC T ~`    | display ~ in the fringe on empty lines                                     |
+| `SPC T F`    | toggle frame fullscreen                                                    |
+| `SPC T f`    | toggle display of the fringe                                               |
+| `SPC T m`    | toggle menu bar                                                            |
+| `SPC T t`    | toggle tool bar                                                            |
 
 ### Statusline
 
@@ -609,7 +616,7 @@ Search index shows the number of occurrence when performing a search via `/` or 
 Search index is provided by `incsearch` layer, to enable this layer:
 
 ```toml
-[layers]
+[[layers]]
     name = "incsearch"
 ```
 
@@ -840,7 +847,7 @@ Navigation is centered on the `hjkl` keys with the hope of providing a fast navi
 | `y y`                 | Copy file full path to system clipboard           |
 | `y Y`                 | Copy file to system clipboard                     |
 | `P`                   | Paste file to the position under the cursor       |
-| `.`                   | Toggle visible ignored files                      |
+| `.`                   | Toggle hidden files                               |
 | `s v`                 | Split edit                                        |
 | `s g`                 | Vertical split edit                               |
 | `p`                   | Preview                                           |
@@ -849,8 +856,8 @@ Navigation is centered on the `hjkl` keys with the hope of providing a fast navi
 | `g x`                 | Execute with vimfiler associated                  |
 | `'`                   | Toggle mark current line                          |
 | `V`                   | Clear all marks                                   |
-| `>`                   | iecrease filetree screenwidth                     |
-| `<`                   | dncrease filetree screenwidth                     |
+| `>`                   | increase filetree screenwidth                     |
+| `<`                   | decrease filetree screenwidth                     |
 | `<Home>`              | Jump to first line                                |
 | `<End>`               | Jump to last line                                 |
 | `Ctrl-Home`           | Switch to project root directory                  |
@@ -1060,9 +1067,11 @@ Text related commands (start with `x`):
 | `SPC x j r`   | set the justification to right                                     |
 | `SPC x J`     | move down a line of text (enter transient state)                   |
 | `SPC x K`     | move up a line of text (enter transient state)                     |
-| `SPC x l d`   | duplicate line or region (TODO)                                    |
-| `SPC x l s`   | sort lines (TODO)                                                  |
-| `SPC x l u`   | uniquify lines (TODO)                                              |
+| `SPC x l d`   | duplicate line or region                                           |
+| `SPC x l s`   | sort lines (ignorecase)                                            |
+| `SPC x l S`   | sort lines (case-senstive)                                         |
+| `SPC x l u`   | uniquify lines (ignorecase)                                        |
+| `SPC x l U`   | uniquify lines (case-senstive)                                     |
 | `SPC x o`     | use avy to select a link in the frame and open it (TODO)           |
 | `SPC x O`     | use avy to select multiple links in the frame and open them (TODO) |
 | `SPC x t c`   | swap (transpose) the current character with the previous one       |
@@ -1071,8 +1080,9 @@ Text related commands (start with `x`):
 | `SPC x t W`   | swap (transpose) the current word with the next one                |
 | `SPC x t l`   | swap (transpose) the current line with the previous one            |
 | `SPC x t L`   | swap (transpose) the current line with the next one                |
-| `SPC x u`     | set the selected text to lower case                                |
-| `SPC x U`     | set the selected text to upper case                                |
+| `SPC x u`     | lowercase text                                                     |
+| `SPC x U`     | uppercase text                                                     |
+| `SPC x ~`     | toggle case text                                                   |
 | `SPC x w c`   | count the words in the select region                               |
 | `SPC x w d`   | show dictionary entry of word from wordnik.com (TODO)              |
 | `SPC x <Tab>` | indent or dedent a region rigidly (TODO)                           |
@@ -1166,7 +1176,7 @@ Comments are handled by [nerdcommenter](https://github.com/scrooloose/nerdcommen
 | `SPC c s`    | comment with pretty layout                              |
 | `SPC c t`    | toggle comment to line                                  |
 | `SPC c T`    | comment to line                                         |
-| `SPC c y`    | toggle comment and yank(TODO)                           |
+| `SPC c y`    | toggle comment and yank                                 |
 | `SPC c Y`    | yank and comment                                        |
 | `SPC c $`    | comment current line from cursor to the end of the line |
 
@@ -1290,8 +1300,8 @@ Windows manipulation commands (start with `w`):
 | `SPC w D`             | delete another window using vim-choosewin                                                                     |
 | `SPC u SPC w D`       | delete another window and its current buffer using vim-choosewin (TODO)                                       |
 | `SPC w t`             | toggle window dedication (dedicated window cannot be reused by a mode) (TODO)                                 |
-| `SPC w f`             | toggle follow mode (TODO)                                                                                     |
-| `SPC w F`             | create new tab(frame)                                                                                         |
+| `SPC w f`             | toggle follow mode                                                                                            |
+| `SPC w F`             | create new tab                                                                                                |
 | `SPC w h`             | move to window on the left                                                                                    |
 | `SPC w H`             | move window to the left                                                                                       |
 | `SPC w j`             | move to window below                                                                                          |
@@ -1309,8 +1319,8 @@ Windows manipulation commands (start with `w`):
 | `SPC w R`             | rotate windows backward                                                                                       |
 | `SPC w s` / `SPC w -` | horizontal split                                                                                              |
 | `SPC w S`             | horizontal split and focus new window                                                                         |
-| `SPC w u`             | undo window layout (used to effectively undo a closed window) (TODO)                                          |
-| `SPC w U`             | redo window layout (TODO)                                                                                     |
+| `SPC w u`             | undo window layout                                                                                            |
+| `SPC w U`             | redo window layout                                                                                            |
 | `SPC w v` / `SPC w /` | vertical split                                                                                                |
 | `SPC w V`             | vertical split and focus new window                                                                           |
 | `SPC w w`             | cycle and focus between windows                                                                               |
@@ -1398,6 +1408,17 @@ After pressing `SPC f /`, the find window will be opened. It is going to run `fi
 By default, `find` is the default tool, you can use `ctrl-e` to switch tools.
 
 ![find](https://user-images.githubusercontent.com/13142418/97999590-79717000-1e26-11eb-91b1-458ab30d6254.gif)
+
+To change the default file searching tool, you can use `file_searching_tools` option.
+It is `[]` by default.
+
+```toml
+[options]
+    file_searching_tools = ['find', 'find -not -iwholename "*.git*" ']
+```
+
+The first item is the name of the tool, the second one is the default searching command.
+
 
 #### Vim and SpaceVim files
 
@@ -1922,8 +1943,8 @@ is based on on `project_rooter_patterns` option, and the default value is:
     project_rooter_patterns = ['.git/', '_darcs/', '.hg/', '.bzr/', '.svn/']
 ```
 
-The project manager will find outermost directory by default, to find nearest directory,
-you need to change `project_rooter_outermost` to `false`.
+The project manager will find the outermost directory by default. To find the nearest directory instead,
+you need to change `project_rooter_outermost` to `false`:
 
 ```toml
 [options]
@@ -1931,14 +1952,22 @@ you need to change `project_rooter_outermost` to `false`.
     project_rooter_outermost = false
 ```
 
-Sometimes we want to ignore some directorys when detect the project root directory.
-add a `!` prefix before the pattern.
+Sometimes we want to ignore some directories when detecting the project root directory.
+Add a `!` prefix before the pattern.
 For example, ignore `node_packages/` directory:
 
 ```toml
 [options]
     project_rooter_patterns = ['.git/', '_darcs/', '.hg/', '.bzr/', '.svn/', '!node_packages/']
     project_rooter_outermost = false
+```
+
+You can also disable project root detection completely (i.e. vim will set the
+root directory to the present working directory):
+
+```toml
+[options]
+    project_rooter_automatically = false
 ```
 
 Project manager commands start with `p`:
@@ -1994,24 +2023,26 @@ Bookmarks manager is included in `tools` layer, to use following key bindings, y
 
 ```toml
 [[layers]]
-name = "tools"
+    name = "tools"
 ```
 
-| Key Bindings | Descriptions                    |
-| ------------ | ------------------------------- |
-| `m a`        | Show list of all bookmarks      |
-| `m m`        | Toggle bookmark in current line |
-| `m n`        | Jump to next bookmark           |
-| `m p`        | Jump to previous bookmark       |
-| `m i`        | Annotate bookmark               |
+| Key Bindings | Descriptions                         |
+| ------------ | ------------------------------------ |
+| `m a`        | Show list of all bookmarks           |
+| `m c`        | Removes bookmarks for current buffer |
+| `m m`        | Toggle bookmark in current line      |
+| `m n`        | Jump to next bookmark                |
+| `m p`        | Jump to previous bookmark            |
+| `m i`        | Annotate bookmark                    |
 
-As SpaceVim use above bookmarks mappings, so you cannot use `a`, `m`, `n`, `p` or `i` registers to mark current position, but other registers should work well.
-If you really need to use these registers, you can map `<Leader> m` to `m` in your bootstrap function,
-then you can use `a` registers via `<Leader> m a`.
+As SpaceVim use above bookmarks mappings, so you cannot use `a`, `c`, `m`, `n`,
+`p` or `i` registers to mark current position, but other registers should work well.
+If you really need to use these registers, you can map `<Leader> m` to `m`
+in your bootstrap function, then you can use `a` registers via `<Leader> m a`.
 
 ```viml
 function! myspacevim#before() abort
-nnoremap <silent><Leader>m m
+    nnoremap <silent><Leader>m m
 endfunction
 ```
 
@@ -2065,6 +2096,7 @@ The task's properties have the following semantic:
 - **isBackground**: `true` or `false`, specifies whether background running is required,
   by default, it is `false`.
 - **description**: short description of the task
+- **problemMatcher**: problems matcher of the task
 
 When start a new task, it will kill the previous task. If you want to keep the task
 run in background, set `isBackground` to `true`.
@@ -2099,6 +2131,45 @@ So you will have the following values for each variable:
 - **\${fileDirname}**: - `/home/your-username/your-project/folder/`
 - **\${fileExtname}**: - `.ext`
 - **\${lineNumber}**: - line number of the cursor
+
+#### Task Problems Matcher
+
+Problem matcher is used to capture the message in the task output
+and show a corresponding problem in quickfix windows.
+
+`problemMatcher` supports `errorformat` and `pattern` property.
+
+If `errorformat` property is not defined, `&errorformat` option
+will be used.
+
+```toml
+[test_problemMatcher]
+    command = "echo"
+    args = ['.SpaceVim.d/tasks.toml:6:1 test error message']
+    isBackground = true
+[test_problemMatcher.problemMatcher]
+    useStdout = true
+    errorformat = '%f:%l:%c\ %m'
+```
+
+If `pattern` is defined, the `errorformat` option will be ignored.
+Here is an example:
+
+```toml
+[test_regexp]
+    command = "echo"
+    args = ['.SpaceVim.d/tasks.toml:12:1 test error message']
+    isBackground = true
+[test_regexp.problemMatcher]
+    useStdout = true
+[test_regexp.problemMatcher.pattern]
+      regexp = '\(.*\):\(\d\+\):\(\d\+\)\s\(\S.*\)'
+      file = 1
+      line = 2
+      column = 3
+      #severity = 4
+      message = 4
+```
 
 #### Task auto-detection
 

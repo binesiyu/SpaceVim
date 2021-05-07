@@ -22,7 +22,7 @@ function! SpaceVim#layers#ui#plugins() abort
         \ [g:_spacevim_root_dir . 'bundle/tagbar', {'loadconf' : 1, 'merged' : 0}],
         \ [g:_spacevim_root_dir . 'bundle/tagbar-makefile.vim', {'merged': 0}],
         \ [g:_spacevim_root_dir . 'bundle/tagbar-proto.vim', {'merged': 0}],
-        \ [g:_spacevim_root_dir . 'bundle/vim-choosewin', {'merged' : 0}],
+        \ [g:_spacevim_root_dir . 'bundle/vim-choosewin', {'on_cmd' : 'ChooseWin', 'merged' : 0}],
         \ [g:_spacevim_root_dir . 'bundle/vim-startify', {'loadconf' : 1, 'merged' : 0}],
         \ ]
   if !SpaceVim#layers#isLoaded('core#statusline')
@@ -83,6 +83,10 @@ function! SpaceVim#layers#ui#config() abort
   call SpaceVim#mapping#space#def('nnoremap', ['t', '8'], 'call call('
         \ . string(s:_function('s:toggle_fill_column')) . ', [])',
         \ 'highlight-long-lines', 1)
+  if g:spacevim_autocomplete_method ==# 'deoplete'
+    call SpaceVim#mapping#space#def('nnoremap', ['t', 'a'], 'call SpaceVim#layers#autocomplete#toggle_deoplete()',
+          \ 'toggle autocomplete', 1)
+  endif
   call SpaceVim#mapping#space#def('nnoremap', ['t', 'b'], 'call call('
         \ . string(s:_function('s:toggle_background')) . ', [])',
         \ 'toggle background', 1)
@@ -117,7 +121,7 @@ function! SpaceVim#layers#ui#config() abort
         \ . string(s:_function('s:toggle_syntax_hi')) . ', [])',
         \ 'toggle-syntax-highlighting', 1)
 
-  call SpaceVim#mapping#space#def('nnoremap', ['T', 'F'], '<F11>',
+  call SpaceVim#mapping#space#def('nmap', ['T', 'F'], '<F11>',
         \ 'fullscreen-frame', 0)
   call SpaceVim#mapping#space#def('nnoremap', ['T', 'm'], 'call call('
         \ . string(s:_function('s:toggle_menu_bar')) . ', [])',
@@ -137,7 +141,7 @@ function! SpaceVim#layers#ui#config() abort
   call SpaceVim#layers#core#statusline#register_mode(
         \ {
         \ 'key' : 'spell-checking',
-        \ 'func' : string(s:_function('s:toggle_spell_check')),
+        \ 'func' : s:_function('s:toggle_spell_check'),
         \ }
         \ )
 

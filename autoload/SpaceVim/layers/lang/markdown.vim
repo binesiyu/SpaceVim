@@ -38,7 +38,7 @@ function! SpaceVim#layers#lang#markdown#plugins() abort
     call SpaceVim#logger#error('npm or yarn is required to build iamcco/markdown-preview and neoclide/vim-node-rpc')
   endif
   call add(plugins, ['iamcco/markdown-preview.nvim',
-        \ { 'on_ft' : 'markdown',
+        \ { 'on_cmd' : 'MarkdownPreview',
         \ 'depends': 'open-browser.vim',
         \ 'build' : 'cd app & ' . s:node_pkgm . ' install' }])
   if !has('nvim')
@@ -103,6 +103,8 @@ function! s:mappings() abort
         \ 'call call('
         \ . string(function('s:run_code_in_block'))
         \ . ', [])', 'run code in block', 1)
+  call SpaceVim#mapping#space#langSPC('nmap', ['l','c'], 'GenTocGFM', 'create content at cursor', 1)
+  call SpaceVim#mapping#space#langSPC('nmap', ['l','u'], 'UpdateToc', 'update content', 1)
 endfunction
 
 function! s:generate_remarkrc() abort

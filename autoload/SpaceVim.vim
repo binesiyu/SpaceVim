@@ -45,7 +45,7 @@ let s:SYSTEM = SpaceVim#api#import('system')
 
 ""
 " Version of SpaceVim , this value can not be changed.
-let g:spacevim_version = '1.7.0-dev'
+let g:spacevim_version = '1.8.0-dev'
 lockvar g:spacevim_version
 
 ""
@@ -78,6 +78,9 @@ let g:spacevim_expand_tab              = 1
 " Enable/Disable relativenumber in current windows, by default it is enabled.
 let g:spacevim_relativenumber          = 1
 
+""
+" Enable/Disable line wrap of vim
+let g:spacevim_wrap_line = 0
 
 ""
 " @section enable_bepo_layout, options-enable_bepo_layout
@@ -1375,6 +1378,7 @@ function! SpaceVim#end() abort
   " tab options:
   set smarttab
   let &expandtab = g:spacevim_expand_tab
+  let &wrap = g:spacevim_wrap_line
 
   if g:spacevim_default_indent > 0
     let &tabstop = g:spacevim_default_indent
@@ -1604,6 +1608,24 @@ endfunction
 " @section Usage, usage
 "   General guide for using SpaceVim. Including layer configuration, bootstrap
 "   function.
+
+
+""
+" @section buffers-and-files, usage-buffers-and-files
+" @parentsection usage
+" @subsection Buffers manipulation key bindings
+" All buffers key bindings are start with `b` prefix:
+" >
+"   Key Bindings	Descriptions
+"   SPC <Tab>	    switch to alternate buffer in the current window (switch back and forth)
+"   SPC b .	      buffer transient state
+"   SPC b b	      switch to a buffer (via denite/unite)
+"   SPC b d	      kill the current buffer (does not delete the visited file)
+"   SPC u SPC b d	kill the current buffer and window (does not delete the visited file) (TODO)
+"   SPC b D	      kill a visible buffer using vim-choosewin
+" <
+
+
 
 ""
 " @section FAQ, faq
